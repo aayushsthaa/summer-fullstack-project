@@ -159,27 +159,9 @@ async function googleAuth(req, res) {
   }
 }
 
-// Auth middleware for protected routes
-function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization || "";
-  const [scheme, token] = authHeader.split(" ");
-  if (scheme !== "Bearer" || !token) {
-    return res.status(401).json({ message: "No token provided" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = { id: decoded.id, role: decoded.role };
-    return next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token" });
-  }
-}
-
-
 async function updateProfileMeController(req,res){
   const { id } = req.user;
-  const { name, bio, github, linkedin, portfolioUrl } = req.body;
+  const { name, bio, github, linkedin, portfolioUrl, skills } = req.body;
 
   try {
       // Find the user and profile
@@ -204,6 +186,7 @@ async function updateProfileMeController(req,res){
       profile.github = github ?? profile.github;
       profile.linkedin = linkedin ?? profile.linkedin;
       profile.portfolioUrl = portfolioUrl ?? profile.portfolioUrl;
+      profile.skills = skills ?? profile.skills;
 
       await profile.save();
 
@@ -226,8 +209,25 @@ async function viewMyProfileController(req,res){
       }
 
       const profile = await Profile.findOne({ user: id });
+
+      // Calculate stats
+      const allAttempts = await AnswerModel.find({ user: id });
+      let totalPercentage = 0;
+      let highestPercentage = 0;
+      if (allAttempts.length > 0) {
+          allAttempts.forEach(attempt => {
+              const percentage = attempt.total ? (attempt.score / attempt.total) * 100 : 0;
+              totalPercentage += percentage;
+              if (percentage > highestPercentage) highestPercentage = percentage;
+          });
+      }
+      const stats = {
+          totalAttempts: allAttempts.length,
+          averageScore: allAttempts.length > 0 ? Math.round(totalPercentage / allAttempts.length) : 0,
+          highestScore: Math.round(highestPercentage),
+      };
       
-      res.status(200).json({ user, profile });
+      res.status(200).json({ user, profile, stats });
   } catch (error) {
       console.error("View Profile Error:", error);
       res.status(500).json({ message: "Failed to fetch profile", error });
@@ -238,7 +238,6 @@ async function viewMyQuizAttemptsController(req,res){
     try {
         const attempts = await AnswerModel.find({ user: userId })
             .sort({ submittedAt: -1 }) // Sort by most recent
-            .limit(10) // Limit to the last 10 attempts
             .populate('questionSet', 'title') // Populate the title from the QuestionSet model
             .select('questionSet score total submittedAt'); // Select only needed fields
 
@@ -257,11 +256,94 @@ async function viewProfileofUserController(req,res){
       }
 
       const profile = await Profile.findOne({ user: id });
+
+      // Fetch last 5 quiz attempts
+      const attempts = await AnswerModel.find({ user: id })
+          .sort({ submittedAt: -1 })
+          .limit(5)
+          .populate('questionSet', 'title')
+          .select('questionSet score total submittedAt');
+
+      // Calculate stats
+      const allAttempts = await AnswerModel.find({ user: id });
+      let totalPercentage = 0;
+      let highestPercentage = 0;
+      if (allAttempts.length > 0) {
+          allAttempts.forEach(attempt => {
+              const percentage = attempt.total ? (attempt.score / attempt.total) * 100 : 0;
+              totalPercentage += percentage;
+              if (percentage > highestPercentage) highestPercentage = percentage;
+          });
+      }
+      const stats = {
+          totalAttempts: allAttempts.length,
+          averageScore: allAttempts.length > 0 ? Math.round(totalPercentage / allAttempts.length) : 0,
+          highestScore: Math.round(highestPercentage),
+      };
       
-      res.status(200).json({ user, profile });
+      res.status(200).json({ user, profile, attempts, stats });
   } catch (error) {
       console.error("View User Profile Error:", error);
       res.status(500).json({ message: "Failed to fetch user profile", error });
+  }
+}
+
+async function listProfessionalsController(req, res) {
+  try {
+    // Find users with role 'professional', sorted by newest first, and populate their profile
+    const professionals = await User.find({ role: 'professional' }).sort({ _id: -1 }).select('-password').lean();
+    const profiles = await Profile.find({ user: { $in: professionals.map(p => p._id) } }).lean();
+
+    const professionalsWithProfiles = professionals.map(user => {
+        const profile = profiles.find(p => p.user.toString() === user._id.toString());
+        return {
+            ...user,
+            profile: profile || {}
+        };
+    });
+
+    res.status(200).json(professionalsWithProfiles);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch professionals', error: err });
+  }
+}
+
+async function changePasswordController(req, res) {
+  const { id } = req.user;
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json({ message: "All password fields are required." });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: "New password and confirmation do not match." });
+  }
+  
+  if (newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters long." });
+  }
+
+  try {
+    const user = await User.findById(id).select("+password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect current password." });
+    }
+
+    const encryptedPassword = await bcrypt.hash(newPassword, saltRounds);
+    user.password = encryptedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully." });
+
+  } catch (error) {
+    console.error("Change Password Error:", error);
+    res.status(500).json({ message: "Failed to change password.", error });
   }
 }
 
@@ -270,9 +352,10 @@ module.exports = {
   createUser,
   loginUser,
   googleAuth,
-  authMiddleware,
   updateProfileMeController,
   viewMyProfileController,
   viewMyQuizAttemptsController,
   viewProfileofUserController,
+  listProfessionalsController,
+  changePasswordController,
 };

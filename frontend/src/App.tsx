@@ -13,11 +13,12 @@ import AttemptQuizPage from "./pages/QuestionSet/AttemptQuizPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminDashboardPage from "./pages/Admin/AdminDashboardPage";
 import UserListPage from "./pages/Admin/UserListPage";
-import UserDetailPage from "./pages/Admin/UserDetailPage";
 import CreateUserPage from "./pages/Admin/CreateUserPage";
 import EditUserPage from "./pages/Admin/EditUserPage";
 import AboutUsPage from "./pages/AboutUsPage";
 import PageNotFound from "./pages/PageNotFound";
+import UsersPage from "./pages/UsersPage";
+import ViewUserProfilePage from "./pages/ViewUserProfilePage";
 
 export interface IAuthState {
   isAuth: boolean;
@@ -99,6 +100,8 @@ function App() {
           {authState?.isAuth === true && (
             <>
               <Route path="/profile/me" element={<ProfilePage />} />
+              <Route path="/profile/:id" element={<ViewUserProfilePage />} />
+              <Route path="/users/professionals" element={<UsersPage />} />
               <Route
                 path="/questionset/list"
                 element={<ListQuestionSetPage />}
@@ -115,7 +118,6 @@ function App() {
             <>
               <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
               <Route path="/admin/users" element={<UserListPage />} />
-              <Route path="/admin/user/:id" element={<UserDetailPage />} />
               <Route path="/admin/user/create" element={<CreateUserPage />} />
               <Route path="/admin/user/edit/:id" element={<EditUserPage />} />
               <Route

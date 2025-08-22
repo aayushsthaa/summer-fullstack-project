@@ -45,15 +45,11 @@ function NavBar() {
             {isAuth ? (
               <>
                 <NavLink to="/questionset/list" className="hover:text-blue-400">
-                  QuestionSets
+                  Assessments
                 </NavLink>
-                {role === "admin" && (
-                  <>
-                    <NavLink to="/admin/users" className="hover:text-blue-400">
-                      Users
-                    </NavLink>
-                  </>
-                )}
+                <NavLink to={role === 'admin' ? "/admin/users" : "/users/professionals"} className="hover:text-blue-400">
+                  Users
+                </NavLink>
                 <NavLink to="/profile/me" className="hover:text-blue-400">
                   Profile
                 </NavLink>
@@ -119,23 +115,19 @@ function NavBar() {
                   onClick={closeNav}
                   className="hover:text-blue-400"
                 >
-                  Quizzes
+                  Assessments
+                </NavLink>
+                 <NavLink to={role === 'admin' ? "/admin/users" : "/users/professionals"} onClick={closeNav} className="hover:text-blue-400">
+                  Users
                 </NavLink>
                 {role === "admin" && (
                   <>
-                    <NavLink
-                      to="/admin/users"
-                      onClick={closeNav}
-                      className="hover:text-blue-400"
-                    >
-                      Users
-                    </NavLink>
                     <NavLink
                       to="/admin/questionset/create"
                       onClick={closeNav}
                       className="hover:text-blue-400"
                     >
-                      New Quiz
+                      New Assessment
                     </NavLink>
                   </>
                 )}

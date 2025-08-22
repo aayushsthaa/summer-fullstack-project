@@ -8,7 +8,7 @@ import {
 } from "react-hook-form";
 import axios from "axios";
 import Modal from "../Modal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface IAttemptQuizFinalData {
   questionSet: string;
@@ -29,12 +29,15 @@ function AttemptQuizForm({
 }) {
   const [result, setResult] = useState<IResult | null>(null);
   const [modal, setModal] = useState({ isOpen: false, title: "", message: "" });
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const navigate = useNavigate();
+
   const defaultValues: IAttempQuestionForm = {
     ...questionSet,
   };
   const methods = useForm({ defaultValues });
 
-  const { watch, register, handleSubmit } = methods;
+  const { handleSubmit } = methods;
 
   const onSubmitHandler = (data: IAttempQuestionForm) => {
     const accessToken = localStorage.getItem("token");
@@ -63,23 +66,27 @@ function AttemptQuizForm({
         setResult(res.data.data);
       })
       .catch((err) => {
-        console.error("Failed to submit quiz", err);
-        setModal({ isOpen: true, title: "Submission Error", message: "There was an error submitting your quiz. Please try again." });
+        console.error("Failed to submit assessment", err);
+        setModal({ isOpen: true, title: "Submission Error", message: "There was an error submitting your assessment. Please try again." });
       });
+  };
+  
+  const handleCancelConfirm = () => {
+    navigate("/questionset/list");
   };
 
   if (result) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
         <div className="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Quiz Completed!</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Assessment Completed!</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">Here's your final score:</p>
             <div className="bg-blue-50 dark:bg-gray-700 rounded-lg p-8">
                 <p className="text-5xl font-extrabold text-blue-600 dark:text-blue-400">{result.score} / {result.total}</p>
             </div>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mt-8">Explore more Quizzes</p>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mt-8">Explore more Assessments</p>
             <Link to="/questionset/list" className="mt-2 inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition-colors duration-300">
-                Back to Quizzes
+                Back to Assessments
             </Link>
         </div>
       </div>
@@ -101,7 +108,14 @@ function AttemptQuizForm({
             
             <CreateQuestions />
             
-            <div className="flex justify-center pt-4">
+            <div className="flex justify-center items-center pt-4 gap-4">
+               <button
+                type="button"
+                onClick={() => setCancelModalOpen(true)}
+                className="w-full md:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 font-bold py-4 px-12 rounded-full transition-colors"
+              >
+                Cancel Assessment
+              </button>
               <button
                 type="submit"
                 className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-full transition-all duration-300 ease-in-out shadow-lg transform hover:scale-105"
@@ -120,6 +134,17 @@ function AttemptQuizForm({
         type="error"
     >
         {modal.message}
+    </Modal>
+    <Modal
+        isOpen={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        onConfirm={handleCancelConfirm}
+        title="Are you sure?"
+        type="warning"
+        confirmText="Yes, Exit"
+        cancelText="Stay"
+    >
+        Your progress will not be saved if you exit now.
     </Modal>
     </>
   );

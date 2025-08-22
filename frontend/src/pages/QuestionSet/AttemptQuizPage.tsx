@@ -53,7 +53,7 @@ function AttemptQuizPage() {
           setIsLoading(false);
         })
         .catch((error) => {
-          console.error("Failed to fetch quiz data:", error);
+          console.error("Failed to fetch assessment data:", error);
           setIsLoading(false);
         });
     }
@@ -64,14 +64,14 @@ function AttemptQuizPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <p className="text-gray-700 dark:text-gray-300 text-lg">Loading Quiz...</p>
+        <p className="text-gray-700 dark:text-gray-300 text-lg">Loading Assessment...</p>
       </div>
     );
   }
 
   return (
     <div>
-      {questionSets ? <AttemptQuizForm questionSet={questionSets} /> : <p className="text-center mt-10">Quiz not found or could not be loaded.</p>}
+      {questionSets ? <AttemptQuizForm questionSet={questionSets} /> : <p className="text-center mt-10">Assessment not found or could not be loaded.</p>}
     </div>
   );
 }

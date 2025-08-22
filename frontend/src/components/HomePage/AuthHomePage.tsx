@@ -1,6 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import UserCard from "../UserCard";
+import type { IUser } from "../../pages/UsersPage";
+import { jwtDecode } from "jwt-decode";
+import type { JwtDecode as AppJwtDecode } from "../../App";
 
 interface IProfileData {
   user: {
@@ -18,17 +22,10 @@ interface IQuizAttempt {
   submittedAt: string;
 }
 
-interface IQuiz {
-  _id: string;
-  title: string;
-  questionCount: number;
-  createdBy?: string;
-}
-
 function AuthHomePage() {
   const [profile, setProfile] = useState<IProfileData | null>(null);
   const [attempts, setAttempts] = useState<IQuizAttempt[]>([]);
-  const [quizzes, setQuizzes] = useState<IQuiz[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,26 +37,26 @@ function AuthHomePage() {
         setIsLoading(false);
         return;
       }
+      
+      const decodedToken: AppJwtDecode = jwtDecode(accessToken);
+      const loggedInUserId = decodedToken.id;
 
       const headers = { Authorization: `Bearer ${accessToken}` };
 
       try {
-        const profileRes = await axios.get(
-          "http://localhost:3000/users/profile/me",
-          { headers }
-        );
-        const attemptsRes = await axios.get(
-          "http://localhost:3000/users/profile/me/attempts",
-          { headers }
-        );
-        const quizzesRes = await axios.get(
-          "http://localhost:3000/api/questions/set/list",
-          { headers }
-        );
+        const profileRes = axios.get("http://localhost:3000/users/profile/me", { headers });
+        const attemptsRes = axios.get("http://localhost:3000/users/profile/me/attempts", { headers });
+        const usersRes = axios.get("http://localhost:3000/users/professionals", { headers });
+        
+        const [profileData, attemptsData, usersData] = await Promise.all([profileRes, attemptsRes, usersRes]);
 
-        setProfile(profileRes.data);
-        setAttempts(attemptsRes.data);
-        setQuizzes(quizzesRes.data.questionSet);
+        setProfile(profileData.data);
+        setAttempts(attemptsData.data);
+        
+        const allUsers: IUser[] = usersData.data;
+        const otherUsers = allUsers.filter(user => user._id !== loggedInUserId);
+        setUsers(otherUsers);
+
       } catch (err) {
         console.error("Failed to fetch dashboard data:", err);
         setError("Could not load your dashboard. Please try again later.");
@@ -103,7 +100,7 @@ function AuthHomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="max-w-7xl mx-auto space-y-12">
         {/* Welcome Section */}
         <div className="flex flex-col lg:flex-row items-center gap-6 justify-center">
           <div className="flex-1">
@@ -114,10 +111,10 @@ function AuthHomePage() {
               Ready to test your knowledge? Let's get started.
             </p>
           </div>
-          <div className="flex-shrink-0 mr-60">
+          <div className="flex-shrink-0 lg:mr-60">
             <img
               src="./src/assets/test.svg"
-              alt="Quiz Illustration"
+              alt="Assessment Illustration"
               className="w-48 h-48"
             />
           </div>
@@ -149,7 +146,7 @@ function AuthHomePage() {
                 to="/questionset/list"
                 className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300"
               >
-                Browse Quizzes
+                Browse Assessments
               </Link>
             </div>
           </div>
@@ -181,11 +178,10 @@ function AuthHomePage() {
               </ul>
             ) : (
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                You haven't attempted any quizzes yet. Time to start!
+                You haven't attempted any assessments yet. Time to start!
               </p>
             )}
 
-            {/* Button to view all quizzes */}
             {attempts.length > 3 && (
               <div className="mt-4 text-center">
                 <Link
@@ -197,6 +193,27 @@ function AuthHomePage() {
               </div>
             )}
           </div>
+        </div>
+        
+        {/* Meet Other Users Section */}
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Meet Other Users</h2>
+            <Link to="/users/professionals" className="text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">
+              View All &rarr;
+            </Link>
+          </div>
+          {users.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {users.slice(0, 3).map(user => (
+                <UserCard key={user._id} user={user} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                <p className="text-gray-500 dark:text-gray-400">No other users found yet.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

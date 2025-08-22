@@ -13,10 +13,10 @@ function UnAuthHomePage() {
         {/* Content */}
         <div className="relative z-10 max-w-3xl">
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight ">
-            Learn Smarter, One Quiz at a Time!
+            Learn Smarter, One Assessment at a Time!
           </h1>
           <p className="mt-4 text-lg md:text-xl text-gray-200 ">
-            Attemp quizzes to test your knowledge and grow with others.
+            Attempt assessments to test your knowledge and grow with others.
           </p>
           <div className="mt-8 flex justify-center gap-4 flex-wrap">
             <Link
@@ -41,7 +41,7 @@ function UnAuthHomePage() {
         <div className="flex flex-col md:flex-row justify-center gap-12 max-w-6xl mx-auto">
           <div>
             <h3 className="text-4xl font-bold text-blue-600">10K+</h3>
-            <p className="text-gray-700 dark:text-gray-300">Quizzes Created</p>
+            <p className="text-gray-700 dark:text-gray-300">Assessments Created</p>
           </div>
           <div>
             <h3 className="text-4xl font-bold text-blue-600">100K+</h3>
@@ -115,7 +115,7 @@ function UnAuthHomePage() {
 
       {/* Footer */}
       <footer className="py-8 px-6 bg-white dark:bg-gray-900 text-black dark:text-gray-400 text-center mt-auto">
-        <p>&copy; {new Date().getFullYear()} All rights reserved</p>
+        <p>&copy; {new Date().getFullYear()} Education University. All rights reserved</p>
         <div className="mt-3 flex justify-center gap-6 text-sm">
           <Link to="#" className="dark:hover:text-white hover:text-blue-500 text-sm">
             Privacy policy

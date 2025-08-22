@@ -7,7 +7,6 @@ import PencilAltIcon from '../../components/icons/PencilAltIcon';
 import PlusCircleIcon from '../../components/icons/PlusCircleIcon';
 import UserGroupIcon from '../../components/icons/UserGroupIcon';
 
-// Simplified Interface for stats
 interface IStats {
   userCount: number;
   quizCount: number;
@@ -29,8 +28,8 @@ function AdminDashboardPage() {
       const headers = { Authorization: `Bearer ${accessToken}` };
 
       try {
-        const res = await axios.get("http://localhost:3000/api/admin/dashboard-stats", { headers });
-        setStats(res.data.stats);
+        const statsRes = await axios.get("http://localhost:3000/api/admin/dashboard-stats", { headers });
+        setStats(statsRes.data.stats);
       } catch (err) {
         console.error("Failed to fetch dashboard data:", err);
         setError("Could not load dashboard data. Please try again later.");
@@ -44,18 +43,14 @@ function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-extrabold text-blue-700 dark:text-white mb-12 text-center">Admin Dashboard</h1>
+      <div className="max-w-4xl mx-auto space-y-12">
+          <h1 className="text-4xl font-extrabold text-blue-700 dark:text-white text-center">Admin Dashboard</h1>
 
-        
-        {error && <div className="p-4 mb-8 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-lg text-center">{error}</div>}
+        {error && <div className="p-4 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-lg text-center">{error}</div>}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Stat Cards */}
           <StatCard title="Total Users" value={stats?.userCount} isLoading={isLoading} icon={<UserGroupIcon />} />
-          <StatCard title="Total Quizzes" value={stats?.quizCount} isLoading={isLoading} icon={<DocumentTextIcon />} />
-          
-          {/* Action Cards */}
+          <StatCard title="Total Assessments" value={stats?.quizCount} isLoading={isLoading} icon={<DocumentTextIcon />} />
           <ActionCard 
             to="/admin/users" 
             title="Manage Users" 
@@ -64,8 +59,8 @@ function AdminDashboardPage() {
           />
           <ActionCard 
             to="/admin/questionset/create" 
-            title="Create New Quiz" 
-            description="Author and publish new quizzes for users." 
+            title="Create New Assessment" 
+            description="Author and publish new assessments for learners." 
             icon={<PlusCircleIcon />}
           />
         </div>

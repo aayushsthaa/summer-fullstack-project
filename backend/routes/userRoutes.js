@@ -7,7 +7,9 @@ const {
   updateProfileMeController, 
   viewMyProfileController,
   viewProfileofUserController,
-  viewMyQuizAttemptsController
+  viewMyQuizAttemptsController,
+  listProfessionalsController,
+  changePasswordController,
 } = require('../controller/userController');
 
 const { validateTokenMiddleware } = require('../middleware/AuthMiddleware');
@@ -25,12 +27,17 @@ router.post('/login', loginUser);
 
 router.get('/list', validateTokenMiddleware, adminOnlyMiddleware, getUser);
 
+// Community routes
+router.get('/professionals', validateTokenMiddleware, listProfessionalsController);
+
 // Profile routes
 router.get('/profile/me', validateTokenMiddleware, viewMyProfileController);
 router.put('/profile/me', validateTokenMiddleware, updateProfileMeController);
+router.put('/profile/me/change-password', validateTokenMiddleware, changePasswordController);
 router.get('/profile/me/attempts', validateTokenMiddleware, viewMyQuizAttemptsController);
 
-// Admin routes
-router.get('/profile/:id', validateTokenMiddleware, adminOnlyMiddleware, viewProfileofUserController);
+// View other users' profiles
+router.get('/profile/:id', validateTokenMiddleware, viewProfileofUserController);
+
 
 module.exports = router;

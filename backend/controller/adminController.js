@@ -23,7 +23,7 @@ async function createQuestionSetController(req, res) {
 }
 
 async function createUserByAdminController(req, res) {
-  const { name, username, email, password, role } = req.body;
+  const { name, username, email, password, role, bio, skills, github, linkedin, portfolioUrl } = req.body;
   try {
     if (!name || !username || !email || !password || !role) {
       return res.status(400).json({ message: "All fields are required" });
@@ -55,12 +55,12 @@ async function createUserByAdminController(req, res) {
 
     const profileData = {
       user: user._id,
-      bio: "",
+      bio: bio || "",
       profilePicture: "",
-      skills: [],
-      github: "",
-      linkedin: "",
-      portfolioUrl: "",
+      skills: skills || [],
+      github: github || "",
+      linkedin: linkedin || "",
+      portfolioUrl: portfolioUrl || "",
     };
     const profile = new Profile(profileData);
     await profile.save();
@@ -93,7 +93,7 @@ async function getDashboardStatsController(req, res) {
 
 async function updateUserByAdminController(req, res) {
     const { id } = req.params;
-    const { name, username, email, role } = req.body;
+    const { name, username, email, role, bio, skills, github, linkedin, portfolioUrl } = req.body;
 
     try {
         const userToUpdate = await User.findById(id);
@@ -101,7 +101,6 @@ async function updateUserByAdminController(req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Check if email or username is being changed to one that already exists
         if (email && email !== userToUpdate.email) {
             const existingUser = await User.findOne({ email });
             if (existingUser) return res.status(400).json({ message: "Email is already in use." });
@@ -115,16 +114,32 @@ async function updateUserByAdminController(req, res) {
         userToUpdate.username = username ?? userToUpdate.username;
         userToUpdate.email = email ?? userToUpdate.email;
         userToUpdate.role = role ?? userToUpdate.role;
+        await userToUpdate.save();
 
-        const updatedUser = await userToUpdate.save();
+        let profileToUpdate = await Profile.findOne({ user: id });
+        if (!profileToUpdate) {
+            profileToUpdate = new Profile({ user: id });
+        }
 
-        res.status(200).json({ message: "User updated successfully", user: updatedUser });
+        profileToUpdate.bio = bio ?? profileToUpdate.bio;
+        profileToUpdate.skills = skills ?? profileToUpdate.skills;
+        profileToUpdate.github = github ?? profileToUpdate.github;
+        profileToUpdate.linkedin = linkedin ?? profileToUpdate.linkedin;
+        profileToUpdate.portfolioUrl = portfolioUrl ?? profileToUpdate.portfolioUrl;
+        await profileToUpdate.save();
+
+        res.status(200).json({ 
+            message: "User and profile updated successfully", 
+            user: userToUpdate,
+            profile: profileToUpdate
+        });
 
     } catch (error) {
         console.error("Admin User Update Error:", error);
         res.status(500).json({ message: "Failed to update user", error });
     }
 }
+
 
 async function deleteUserByAdminController(req, res) {
     const { id } = req.params;

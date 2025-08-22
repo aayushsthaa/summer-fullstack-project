@@ -61,7 +61,7 @@ function ListQuestionSetForm() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <p className="text-gray-700 dark:text-gray-300 text-lg">
-          Loading Question Sets...
+          Loading Assessments...
         </p>
       </div>
     );
@@ -71,17 +71,17 @@ function ListQuestionSetForm() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center text-center p-4 gap-y-4">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-          No Quizzes Found
+          No Assessments Found
         </h2>
         <p className="text-gray-500 dark:text-gray-400">
-          It looks like there are no quizzes available at the moment.
+          It looks like there are no assessments available at the moment.
         </p>
         {isAuth && role === "admin" && (
           <NavLink
             to="/admin/questionset/create"
             className="hover:text-gray-200 text-white transition-colors duration-300 px-4 py-2 rounded-2xl bg-blue-700"
           >
-            Create Question
+            Create Assessment
           </NavLink>
         )}
       </div>
@@ -93,14 +93,14 @@ function ListQuestionSetForm() {
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center">
           <h2 className="text-4xl font-extrabold text-center mb-10 text-blue-700 dark:text-white">
-            All Question Sets
+            All Assessments
           </h2>
           {isAuth && role === "admin" && (
             <NavLink
               to="/admin/questionset/create"
               className="hover:text-gray-200 text-white transition-colors duration-300 px-4 py-2 rounded-2xl bg-blue-700"
             >
-              Create Question
+              Create Assessment
             </NavLink>
           )}
         </div>
@@ -153,7 +153,7 @@ function ListQuestionSetForm() {
                       className="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-2"
                       aria-label={`Take test: ${question.title}`}
                     >
-                      <span>Take Test</span>
+                      <span>Take Assessment</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4"

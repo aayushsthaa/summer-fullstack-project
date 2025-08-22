@@ -7,7 +7,7 @@ import {
 } from "react-hook-form";
 import Modal from "../Modal";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface QuestionSetForm {
   title: string;
@@ -36,7 +36,7 @@ function CreateQuestionSetForm() {
   const onSubmitHandler = (data: QuestionSetForm) => {
     // Basic validation
     if (!data.title.trim()) {
-        setModal({ isOpen: true, title: "Validation Error", message: "Please enter a quiz title.", type: "error"});
+        setModal({ isOpen: true, title: "Validation Error", message: "Please enter an assessment title.", type: "error"});
         return;
     }
     for (const q of data.questions) {
@@ -68,15 +68,22 @@ function CreateQuestionSetForm() {
         },
       })
       .then(() => {
-        setModal({ isOpen: true, title: "Success!", message: "Question Set Created Successfully", type: "success"});
+        setModal({ isOpen: true, title: "Success!", message: "Assessment Created Successfully", type: "success"});
         methods.reset(defaultValues);
-        navigate("/questionset/list");
+        // Do not navigate immediately, wait for modal confirmation
       })
       .catch((err) => {
         console.error("Failed to create question set", err);
-        setModal({ isOpen: true, title: "Error", message: "An error occurred while creating the quiz.", type: "error"});
+        setModal({ isOpen: true, title: "Error", message: "An error occurred while creating the assessment.", type: "error"});
       });
   };
+
+  const closeModalAndNavigate = () => {
+      setModal({ ...modal, isOpen: false });
+      if (modal.type === 'success') {
+          navigate("/questionset/list");
+      }
+  }
 
   return (
     <>
@@ -85,12 +92,12 @@ function CreateQuestionSetForm() {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-8">
             <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
-                <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Create a New Quiz</h1>
-                <p className="text-gray-500 dark:text-gray-400 mb-6">Fill in the details below to build your quiz.</p>
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Create a New Assessment</h1>
+                <p className="text-gray-500 dark:text-gray-400 mb-6">Fill in the details below to build your assessment.</p>
                 
-                {/* Quiz Title */}
+                {/* Assessment Title */}
                 <div>
-                  <label htmlFor="title" className="block text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Quiz Title</label>
+                  <label htmlFor="title" className="block text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Assessment Title</label>
                   <input
                     id="title"
                     {...register("title", { required: "Title is required" })}
@@ -106,12 +113,17 @@ function CreateQuestionSetForm() {
                 <CreateQuestions />
             </div>
             
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-4">
+              <Link to="/questionset/list"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 font-bold py-3 px-8 rounded-full transition-colors duration-300"
+              >
+                Cancel
+              </Link>
               <button
                 type="submit"
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 ease-in-out shadow-md transform hover:scale-105"
               >
-                Create Quiz
+                Create Assessment
               </button>
             </div>
           </form>
@@ -120,7 +132,7 @@ function CreateQuestionSetForm() {
     </div>
     <Modal
         isOpen={modal.isOpen}
-        onClose={() => setModal({ ...modal, isOpen: false })}
+        onClose={closeModalAndNavigate}
         title={modal.title}
         type={modal.type}
     >
