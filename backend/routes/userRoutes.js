@@ -10,6 +10,7 @@ const {
   viewMyQuizAttemptsController,
   listProfessionalsController,
   changePasswordController,
+  setPasswordController,
 } = require('../controller/userController');
 
 const { validateTokenMiddleware } = require('../middleware/AuthMiddleware');
@@ -34,6 +35,7 @@ router.get('/professionals', validateTokenMiddleware, listProfessionalsControlle
 router.get('/profile/me', validateTokenMiddleware, viewMyProfileController);
 router.put('/profile/me', validateTokenMiddleware, updateProfileMeController);
 router.put('/profile/me/change-password', validateTokenMiddleware, changePasswordController);
+router.put('/profile/me/set-password', validateTokenMiddleware, setPasswordController);
 router.get('/profile/me/attempts', validateTokenMiddleware, viewMyQuizAttemptsController);
 
 // View other users' profiles

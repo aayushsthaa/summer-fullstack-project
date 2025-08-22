@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import ProfileForm, { type IProfileData } from "../components/Profile/ProfileForm";
 import SocialLink from "../components/Profile/SocialLink";
@@ -40,19 +40,19 @@ interface ChangePasswordModalProps {
   onClose: () => void;
 }
 
-type FormData = {
+type ChangePasswordFormData = {
     currentPassword: "";
     newPassword: "";
     confirmPassword: "";
 }
 
 const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProps) => {
-  const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<ChangePasswordFormData>();
   const [notificationModal, setNotificationModal] = useState({ isOpen: false, title: "", message: "", type: "error" as "error" | "success" });
 
   const newPassword = watch("newPassword");
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: ChangePasswordFormData) => {
     const accessToken = localStorage.getItem("token");
     try {
       await axios.put("http://localhost:3000/users/profile/me/change-password", data, {
@@ -163,6 +163,127 @@ const ChangePasswordModal = ({ isOpen, onClose }: ChangePasswordModalProps) => {
 };
 
 
+// Set Password Modal Component
+interface SetPasswordModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+type SetPasswordFormData = {
+  newPassword: "";
+  confirmPassword: "";
+}
+
+const SetPasswordModal = ({ isOpen, onClose, onSuccess }: SetPasswordModalProps) => {
+  const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<SetPasswordFormData>();
+  const [notificationModal, setNotificationModal] = useState({ isOpen: false, title: "", message: "", type: "error" as "error" | "success" });
+
+  const newPassword = watch("newPassword");
+
+  const onSubmit = async (data: SetPasswordFormData) => {
+    const accessToken = localStorage.getItem("token");
+    try {
+      await axios.put("http://localhost:3000/users/profile/me/set-password", data, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setNotificationModal({
+        isOpen: true,
+        title: "Success",
+        message: "Password set successfully! You can now log in with your email and password.",
+        type: "success",
+      });
+    } catch (error: any) {
+      setNotificationModal({
+        isOpen: true,
+        title: "Error",
+        message: error.response?.data?.message || "Failed to set password.",
+        type: "error",
+      });
+    }
+  };
+  
+  const handleCloseMainModal = () => {
+    reset();
+    onClose();
+  };
+  
+  const handleCloseNotificationAndMain = () => {
+    const wasSuccess = notificationModal.type === 'success';
+    setNotificationModal({ ...notificationModal, isOpen: false });
+    if(wasSuccess) {
+        handleCloseMainModal();
+        onSuccess();
+    }
+  }
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 transition-opacity duration-300" role="dialog" aria-modal="true">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md">
+          <div className="p-6 sm:p-8 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Set Your Password</h2>
+            <button
+                type="button"
+                onClick={handleCloseMainModal}
+                className="p-2 rounded-full text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                aria-label="Close"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="p-6 sm:p-8 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">New Password</label>
+                <input
+                  type="password"
+                  {...register("newPassword", {
+                    required: "New password is required",
+                    minLength: { value: 6, message: "Password must be at least 6 characters" },
+                  })}
+                  className="mt-1 block w-full input-style"
+                />
+                {errors.newPassword && <p className="text-red-500 text-xs mt-1">{errors.newPassword.message}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New Password</label>
+                <input
+                  type="password"
+                  {...register("confirmPassword", {
+                    required: "Please confirm your new password",
+                    validate: value => value === newPassword || "The passwords do not match"
+                  })}
+                  className="mt-1 block w-full input-style"
+                />
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
+              </div>
+            </div>
+            <div className="flex justify-end gap-4 p-4 sm:p-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
+              <button type="button" onClick={handleCloseMainModal} className="py-2 px-4 rounded-md text-sm font-semibold bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200">
+                Cancel
+              </button>
+              <button type="submit" className="text-white py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-700 text-sm font-semibold">
+                Set Password
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <Modal
+          isOpen={notificationModal.isOpen}
+          onClose={handleCloseNotificationAndMain}
+          title={notificationModal.title}
+          type={notificationModal.type}
+        >
+          {notificationModal.message}
+      </Modal>
+    </>
+  );
+};
+
+
 function ProfilePage() {
   const [profileData, setProfileData] = useState<IProfileData | null>(null);
   const [stats, setStats] = useState<IStats | null>(null);
@@ -171,44 +292,48 @@ function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+  const [isSetPasswordModalOpen, setIsSetPasswordModalOpen] = useState(false);
+  const [hasPassword, setHasPassword] = useState(false);
+  
+  const fetchData = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("You are not authenticated.");
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    const headers = { Authorization: `Bearer ${token}` };
+    try {
+      const profileRes = await axios.get("http://localhost:3000/users/profile/me", { headers });
+      const attemptsRes = await axios.get("http://localhost:3000/users/profile/me/attempts", { headers });
+
+      const { user, profile, stats, hasPassword } = profileRes.data;
+      setProfileData({
+        name: user.name || "",
+        username: user.username || "",
+        email: user.email || "",
+        bio: profile?.bio || "",
+        github: profile?.github || "",
+        linkedin: profile?.linkedin || "",
+        portfolioUrl: profile?.portfolioUrl || "",
+        skills: profile?.skills || [],
+      });
+      setStats(stats);
+      setHasPassword(hasPassword);
+      setQuizAttempts(attemptsRes.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load profile.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("You are not authenticated.");
-        setIsLoading(false);
-        return;
-      }
-
-      const headers = { Authorization: `Bearer ${token}` };
-      try {
-        const profileRes = await axios.get("http://localhost:3000/users/profile/me", { headers });
-        const attemptsRes = await axios.get("http://localhost:3000/users/profile/me/attempts", { headers });
-
-        const { user, profile, stats } = profileRes.data;
-        setProfileData({
-          name: user.name || "",
-          username: user.username || "",
-          email: user.email || "",
-          bio: profile?.bio || "",
-          github: profile?.github || "",
-          linkedin: profile?.linkedin || "",
-          portfolioUrl: profile?.portfolioUrl || "",
-          skills: profile?.skills || [],
-        });
-        setStats(stats);
-        setQuizAttempts(attemptsRes.data);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load profile.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleProfileUpdate = (updatedData: IProfileData) => {
     setProfileData(updatedData);
@@ -265,9 +390,15 @@ function ProfilePage() {
                  <button onClick={() => setIsEditModalOpen(true)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
                     Edit Profile
                 </button>
-                 <button onClick={() => setIsChangePasswordModalOpen(true)} className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-3 rounded-lg transition-colors">
-                    Change Password
-                </button>
+                {hasPassword ? (
+                  <button onClick={() => setIsChangePasswordModalOpen(true)} className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-3 rounded-lg transition-colors">
+                      Change Password
+                  </button>
+                ) : (
+                   <button onClick={() => setIsSetPasswordModalOpen(true)} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors">
+                      Set Password
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -334,6 +465,11 @@ function ProfilePage() {
       <ChangePasswordModal 
         isOpen={isChangePasswordModalOpen}
         onClose={() => setIsChangePasswordModalOpen(false)}
+      />
+      <SetPasswordModal
+        isOpen={isSetPasswordModalOpen}
+        onClose={() => setIsSetPasswordModalOpen(false)}
+        onSuccess={fetchData}
       />
     </>
   );

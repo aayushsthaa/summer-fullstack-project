@@ -83,7 +83,7 @@ async function loginUser(req, res) {
     // If your schema has password: { select: false }, keep +password.
     // Otherwise it's harmless.
     const user = await User.findOne({ email }).select("+password");
-    if (!user) {
+    if (!user || !user.password) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
@@ -203,11 +203,12 @@ async function updateProfileMeController(req,res){
 async function viewMyProfileController(req,res){
   const { id } = req.user;
   try {
-      const user = await User.findById(id).select("-password");
+      const user = await User.findById(id).select("+password");
       if (!user) {
           return res.status(404).json({ message: "User not found" });
       }
-
+      
+      const hasPassword = !!user.password;
       const profile = await Profile.findOne({ user: id });
 
       // Calculate stats
@@ -227,7 +228,10 @@ async function viewMyProfileController(req,res){
           highestScore: Math.round(highestPercentage),
       };
       
-      res.status(200).json({ user, profile, stats });
+      const userResponse = user.toObject();
+      delete userResponse.password;
+
+      res.status(200).json({ user: userResponse, profile, stats, hasPassword });
   } catch (error) {
       console.error("View Profile Error:", error);
       res.status(500).json({ message: "Failed to fetch profile", error });
@@ -329,6 +333,10 @@ async function changePasswordController(req, res) {
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
+    
+    if (!user.password) {
+      return res.status(400).json({ message: "Account does not have a password. Please use the 'Set Password' feature." });
+    }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
@@ -347,6 +355,45 @@ async function changePasswordController(req, res) {
   }
 }
 
+async function setPasswordController(req, res) {
+  const { id } = req.user;
+  const { newPassword, confirmPassword } = req.body;
+
+  if (!newPassword || !confirmPassword) {
+    return res.status(400).json({ message: "All password fields are required." });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: "New password and confirmation do not match." });
+  }
+  
+  if (newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters long." });
+  }
+
+  try {
+    const user = await User.findById(id).select("+password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    
+    // Prevent users with a password from using this endpoint
+    if (user.password) {
+        return res.status(400).json({ message: "Account already has a password. Please use the 'Change Password' feature." });
+    }
+
+    const encryptedPassword = await bcrypt.hash(newPassword, saltRounds);
+    user.password = encryptedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password set successfully." });
+
+  } catch (error) {
+    console.error("Set Password Error:", error);
+    res.status(500).json({ message: "Failed to set password.", error });
+  }
+}
+
 module.exports = {
   getUser,
   createUser,
@@ -358,4 +405,5 @@ module.exports = {
   viewProfileofUserController,
   listProfessionalsController,
   changePasswordController,
+  setPasswordController,
 };
