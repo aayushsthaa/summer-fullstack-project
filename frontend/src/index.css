@@ -1,0 +1,69 @@
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50 transition-colors duration-300;
+}
+
+/* Light mode (default) */
+#dark-mode-icon {
+  display: none;
+}
+#light-mode-icon {
+  display: block;
+}
+
+/* Dark mode */
+html.dark #dark-mode-icon {
+  display: block;
+}
+html.dark #light-mode-icon {
+  display: none;
+}
+
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.navBarSlideIn{
+  display:flex;
+  animation: slideIn 0.3s ease-in-out forwards;
+}
+
+.navBarSlideOut{
+  display:flex;
+  animation: slideOut 0.3s ease-in-out forwards;
+}
+
+.active{
+  position: relative;
+}
+.active::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background-color: oklch(62.3% 0.214 259.815);
+  bottom: -9px;
+  left: -2;
+
+}
+
+.input-style {
+  @apply px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
+}
