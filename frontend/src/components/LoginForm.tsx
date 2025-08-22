@@ -77,7 +77,7 @@ function LoginForm() {
   return (
     <>
       <div className="form-container w-full h-full mt-4 bg-white dark:bg-gray-900 flex items-center justify-center">
-        <div className="flex flex-col justify-center gap-6 px-4 py-8 sm:p-8 md:p-10 bg-white dark:bg-gray-900 dark:text-white mx-auto rounded-lg border border-gray-200 dark:border-0 drop-shadow-lg dark:sm:drop-shadow-gray-500  w-full max-w-xl">
+        <div className="flex flex-col justify-center gap-6 px-4 py-8 sm:p-8 md:p-10 bg-white dark:bg-gray-900 dark:text-white mx-auto rounded-lg border border-gray-200 dark:border-0 drop-shadow-2xl dark:sm:drop-shadow-gray-500  w-full max-w-xl">
           <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-500">
             Log in
           </h2>
