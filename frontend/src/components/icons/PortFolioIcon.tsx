@@ -1,2 +1,11 @@
-const PortfolioIcon = () =><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 16 16"><path d="M.85 3.85A.85.85 0 0 1 1.7 3h12.6a.85.85 0 0 1 .85.85v8.3a.85.85 0 0 1-.85.85H1.7a.85.85 0 0 1-.85-.85zM14.3 4H1.7v3.328h12.6zm0 4.328H1.7V12h12.6z"/></svg>
+const PortfolioIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5"
+    fill="currentColor"
+    viewBox="0 0 16 16"
+  >
+    <path d="M.85 3.85A.85.85 0 0 1 1.7 3h12.6a.85.85 0 0 1 .85.85v8.3a.85.85 0 0 1-.85.85H1.7a.85.85 0 0 1-.85-.85zM14.3 4H1.7v3.328h12.6zm0 4.328H1.7V12h12.6z" />
+  </svg>
+);
 export default PortfolioIcon;

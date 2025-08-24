@@ -17,12 +17,16 @@ function ListQuestionSetForm() {
   const navigate = useNavigate();
   const { isAuth, role } = useContext(AuthContext);
 
-  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '', title: '' });
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    id: "",
+    title: "",
+  });
   const [notificationModal, setNotificationModal] = useState({
-      isOpen: false,
-      title: "",
-      message: "",
-      type: "error" as "success" | "error"
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "error" as "success" | "error",
   });
 
   const openDeleteModal = (id: string, title: string) => {
@@ -30,33 +34,39 @@ function ListQuestionSetForm() {
   };
 
   const handleConfirmDelete = async () => {
-      if (!deleteModal.id) return;
+    if (!deleteModal.id) return;
 
-      try {
-          const accessToken = localStorage.getItem("token");
-          await axios.delete(`http://localhost:3000/api/questions/delete/${deleteModal.id}`, {
-              headers: {
-                  Authorization: `Bearer ${accessToken}`,
-              },
-          });
-          setQuestionSet(prevSets => prevSets.filter(set => set._id !== deleteModal.id));
-          setNotificationModal({
-              isOpen: true,
-              title: "Success",
-              message: `Assessment "${deleteModal.title}" deleted successfully.`,
-              type: "success"
-          });
-      } catch (error: any) {
-          console.error("Failed to delete question set:", error);
-          setNotificationModal({
-              isOpen: true,
-              title: "Error",
-              message: error.response?.data?.message || "Failed to delete assessment.",
-              type: "error"
-          });
-      } finally {
-        setDeleteModal({ isOpen: false, id: '', title: '' });
-      }
+    try {
+      const accessToken = localStorage.getItem("token");
+      await axios.delete(
+        `http://localhost:3000/api/questions/delete/${deleteModal.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setQuestionSet((prevSets) =>
+        prevSets.filter((set) => set._id !== deleteModal.id)
+      );
+      setNotificationModal({
+        isOpen: true,
+        title: "Success",
+        message: `Assessment "${deleteModal.title}" deleted successfully.`,
+        type: "success",
+      });
+    } catch (error: any) {
+      console.error("Failed to delete question set:", error);
+      setNotificationModal({
+        isOpen: true,
+        title: "Error",
+        message:
+          error.response?.data?.message || "Failed to delete assessment.",
+        type: "error",
+      });
+    } finally {
+      setDeleteModal({ isOpen: false, id: "", title: "" });
+    }
   };
 
   useEffect(() => {
@@ -119,74 +129,37 @@ function ListQuestionSetForm() {
 
   return (
     <>
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-12">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center">
-          <h2 className="text-4xl font-extrabold text-center mb-10 text-blue-700 dark:text-white">
-            All Assessments
-          </h2>
-          {isAuth && role === "admin" && (
-            <NavLink
-              to="/admin/questionset/create"
-              className="hover:text-gray-200 text-white transition-colors duration-300 px-4 py-2 rounded-2xl bg-blue-700"
-            >
-              Create Assessment
-            </NavLink>
-          )}
-        </div>
-        <div className="space-y-4">
-          {questionSets.map((question) => {
-            const takeQuizHandler = () => {
-              navigate(`/questionset/${question._id}/attempt`);
-            };
-            return (
-              <div
-                key={question._id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer"
-                onClick={takeQuizHandler}
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between items-center">
+            <h2 className="text-4xl font-extrabold text-center mb-10 text-blue-700 dark:text-white">
+              All Assessments
+            </h2>
+            {isAuth && role === "admin" && (
+              <NavLink
+                to="/admin/questionset/create"
+                className="hover:text-gray-200 text-white transition-colors duration-300 px-4 py-2 rounded-2xl bg-blue-700"
               >
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <div className="flex-shrink-0 bg-blue-100 dark:bg-gray-700 p-3 rounded-lg">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-blue-600 dark:text-blue-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                  </div>
-
-                  <div className="flex-grow">
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
-                      {question.title}
-                    </h3>
-                    <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      <span>{question.questionCount} Questions</span>
-                      {question.createdBy && (
-                        <>
-                          <span className="hidden sm:inline">&middot;</span>
-                          <span>Created by: {question.createdBy}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="w-full sm:w-auto flex-shrink-0 mt-4 sm:mt-0 flex gap-3 items-center">
-                    <button
-                      className="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-2"
-                      aria-label={`Take test: ${question.title}`}
-                    >
-                      <span>Take Assessment</span>
+                Create Assessment
+              </NavLink>
+            )}
+          </div>
+          <div className="space-y-4">
+            {questionSets.map((question) => {
+              const takeQuizHandler = () => {
+                navigate(`/questionset/${question._id}/attempt`);
+              };
+              return (
+                <div
+                  key={question._id}
+                  className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer"
+                  onClick={takeQuizHandler}
+                >
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <div className="flex-shrink-0 bg-blue-100 dark:bg-gray-700 p-3 rounded-lg">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
+                        className="h-6 w-6 text-blue-600 dark:text-blue-400"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -195,50 +168,104 @@ function ListQuestionSetForm() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M9 5l7 7-7 7"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                       </svg>
-                    </button>
-                    {isAuth && role === "admin" && (
+                    </div>
+
+                    <div className="flex-grow">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
+                        {question.title}
+                      </h3>
+                      <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        <span>{question.questionCount} Questions</span>
+                        {question.createdBy && (
+                          <>
+                            <span className="hidden sm:inline">&middot;</span>
+                            <span>Created by: {question.createdBy}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="w-full sm:w-auto flex-shrink-0 mt-4 sm:mt-0 flex gap-3 items-center">
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openDeleteModal(question._id, question.title);
-                        }}
-                        className="p-2 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
-                        aria-label={`Delete assessment: ${question.title}`}
+                        className="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-2"
+                        aria-label={`Take test: ${question.title}`}
                       >
-                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                           <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                         </svg>
+                        <span>Take Assessment</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
                       </button>
-                    )}
+                      {isAuth && role === "admin" && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openDeleteModal(question._id, question.title);
+                          }}
+                          className="p-2 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
+                          aria-label={`Delete assessment: ${question.title}`}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
-    <Modal
-      isOpen={deleteModal.isOpen}
-      onClose={() => setDeleteModal({ isOpen: false, id: '', title: '' })}
-      onConfirm={handleConfirmDelete}
-      title="Confirm Deletion"
-      type="warning"
-      confirmText="Delete"
-    >
-      Are you sure you want to delete the assessment "<strong>{deleteModal.title}</strong>"? This action cannot be undone.
-    </Modal>
-    <Modal
+      <Modal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, id: "", title: "" })}
+        onConfirm={handleConfirmDelete}
+        title="Confirm Deletion"
+        type="warning"
+        confirmText="Delete"
+      >
+        Are you sure you want to delete the assessment "
+        <strong>{deleteModal.title}</strong>"? This action cannot be undone.
+      </Modal>
+      <Modal
         isOpen={notificationModal.isOpen}
-        onClose={() => setNotificationModal({ isOpen: false, title: "", message: "", type: "error" })}
+        onClose={() =>
+          setNotificationModal({
+            isOpen: false,
+            title: "",
+            message: "",
+            type: "error",
+          })
+        }
         title={notificationModal.title}
         type={notificationModal.type}
-    >
+      >
         {notificationModal.message}
-    </Modal>
+      </Modal>
     </>
   );
 }

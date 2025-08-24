@@ -40,7 +40,6 @@ export const AuthContext = createContext<IAuthContext>({
   setAuthState: () => {},
 });
 
-
 function App() {
   const [authState, setAuthState] = useState<IAuthState>({
     isAuth: false,
@@ -83,7 +82,7 @@ function App() {
       >
         <NavBar />
         <Routes>
-          <Route path="*" element={<PageNotFound/>} />
+          <Route path="*" element={<PageNotFound />} />
           {/* GUEST & ALL AUTH Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
@@ -92,7 +91,7 @@ function App() {
             <>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/about" element={<AboutUsPage/>} />
+              <Route path="/about" element={<AboutUsPage />} />
             </>
           )}
 

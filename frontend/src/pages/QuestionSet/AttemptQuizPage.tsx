@@ -30,7 +30,9 @@ export interface IChoice {
 function AttemptQuizPage() {
   const { id } = useParams();
 
-  const [questionSets, setQuestionSet] = useState<IAttempQuestionForm | null>(null);
+  const [questionSets, setQuestionSet] = useState<IAttempQuestionForm | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -64,14 +66,22 @@ function AttemptQuizPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <p className="text-gray-700 dark:text-gray-300 text-lg">Loading Assessment...</p>
+        <p className="text-gray-700 dark:text-gray-300 text-lg">
+          Loading Assessment...
+        </p>
       </div>
     );
   }
 
   return (
     <div>
-      {questionSets ? <AttemptQuizForm questionSet={questionSets} /> : <p className="text-center mt-10">Assessment not found or could not be loaded.</p>}
+      {questionSets ? (
+        <AttemptQuizForm questionSet={questionSets} />
+      ) : (
+        <p className="text-center mt-10">
+          Assessment not found or could not be loaded.
+        </p>
+      )}
     </div>
   );
 }

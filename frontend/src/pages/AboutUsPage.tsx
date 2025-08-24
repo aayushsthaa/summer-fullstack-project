@@ -12,7 +12,13 @@ export default function AboutUs() {
             Fostering a Community of Lifelong Learners
           </h2>
           <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-400">
-            Education University started with a vision to make learning accessible, engaging, and collaborative. We believe that education is a journey, not a destination. Our platform provides a space for students and educators to create, share, and take assessments, helping to solidify knowledge and uncover new areas of learning. We are more than just a platform; we are a community dedicated to growth and the pursuit of knowledge.
+            Education University started with a vision to make learning
+            accessible, engaging, and collaborative. We believe that education
+            is a journey, not a destination. Our platform provides a space for
+            students and educators to create, share, and take assessments,
+            helping to solidify knowledge and uncover new areas of learning. We
+            are more than just a platform; we are a community dedicated to
+            growth and the pursuit of knowledge.
           </p>
         </div>
 
@@ -52,7 +58,11 @@ export default function AboutUs() {
               Knowledge Sharing for a Brighter Future
             </h3>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              To be the leading platform for educational assessment and collaborative learning, fostering a global community where knowledge is accessible to all. We aim to empower a new generation of learners who are curious, skilled, and prepared for the challenges of tomorrow.
+              To be the leading platform for educational assessment and
+              collaborative learning, fostering a global community where
+              knowledge is accessible to all. We aim to empower a new generation
+              of learners who are curious, skilled, and prepared for the
+              challenges of tomorrow.
             </p>
           </div>
           <div className="space-y-4">
@@ -61,7 +71,11 @@ export default function AboutUs() {
               Accessible Learning Through Interaction
             </h3>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Our mission is to provide an intuitive and powerful platform for creating, attempting, and analyzing assessments. We are committed to helping individuals and institutions benchmark skills, track learning progress, and cultivate a culture of continuous improvement.
+              Our mission is to provide an intuitive and powerful platform for
+              creating, attempting, and analyzing assessments. We are committed
+              to helping individuals and institutions benchmark skills, track
+              learning progress, and cultivate a culture of continuous
+              improvement.
             </p>
           </div>
         </div>

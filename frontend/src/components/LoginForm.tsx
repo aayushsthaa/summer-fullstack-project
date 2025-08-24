@@ -129,16 +129,16 @@ function LoginForm() {
           </div>
           <div className="flex  flex-col justify-between gap-4 ">
             <button
-            className="w-full flex gap-2 items-center justify-center px-4 py-2 flex-1 rounded-md hover:bg-gray-200 dark:bg-zinc-100 dark:text-black border border-gray-300 dark:border-0"
-            onClick={() => login()}
-          >
-            <img
-              src="./src/assets/google.png"
-              alt="google"
-              className="w-5 h-5"
-            />
-            Continue with Google
-          </button>
+              className="w-full flex gap-2 items-center justify-center px-4 py-2 flex-1 rounded-md hover:bg-gray-200 dark:bg-zinc-100 dark:text-black border border-gray-300 dark:border-0"
+              onClick={() => login()}
+            >
+              <img
+                src="./src/assets/google.png"
+                alt="google"
+                className="w-5 h-5"
+              />
+              Continue with Google
+            </button>
             <button className="px-4 py-2 flex-1 rounded-md hover:bg-blue-500 bg-blue-700 text-white w-full flex gap-2 items-center justify-center">
               <img
                 src="./src/assets/facebook.png"

@@ -28,7 +28,7 @@ router.post('/login', loginUser);
 
 router.get('/list', validateTokenMiddleware, adminOnlyMiddleware, getUser);
 
-// Community routes
+// Professional routes
 router.get('/professionals', validateTokenMiddleware, listProfessionalsController);
 
 // Profile routes

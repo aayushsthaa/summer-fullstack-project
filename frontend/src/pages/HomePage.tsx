@@ -11,10 +11,10 @@ function HomePage() {
     return <UnAuthHomePage />;
   }
 
-  if (role === 'admin') {
+  if (role === "admin") {
     return <AdminDashboardPage />;
   }
-  
+
   return <AuthHomePage />;
 }
 

@@ -4,16 +4,16 @@ import axios from "axios";
 import EditUserForm from "../../components/Admin/EditUserForm";
 
 export interface IEditableUserData {
-    _id: string;
-    name: string;
-    username: string;
-    email: string;
-    role: "professional" | "admin";
-    bio?: string;
-    skills?: { name: string; level: 'Beginner' | 'Intermediate' | 'Advanced' }[];
-    github?: string;
-    linkedin?: string;
-    portfolioUrl?: string;
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  role: "professional" | "admin";
+  bio?: string;
+  skills?: { name: string; level: "Beginner" | "Intermediate" | "Advanced" }[];
+  github?: string;
+  linkedin?: string;
+  portfolioUrl?: string;
 }
 
 function EditUserPage() {
@@ -29,30 +29,34 @@ function EditUserPage() {
         setIsLoading(false);
         return;
       }
-      
+
       const accessToken = localStorage.getItem("token");
       try {
-        const res = await axios.get(`http://localhost:3000/users/profile/${id}`, {
-          headers: { authorization: `Bearer ${accessToken}` }
-        });
-        
+        const res = await axios.get(
+          `http://localhost:3000/users/profile/${id}`,
+          {
+            headers: { authorization: `Bearer ${accessToken}` },
+          }
+        );
+
         const { user, profile } = res.data;
         const combinedData: IEditableUserData = {
-            _id: user._id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            role: user.role,
-            bio: profile?.bio || "",
-            skills: profile?.skills || [],
-            github: profile?.github || "",
-            linkedin: profile?.linkedin || "",
-            portfolioUrl: profile?.portfolioUrl || "",
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          bio: profile?.bio || "",
+          skills: profile?.skills || [],
+          github: profile?.github || "",
+          linkedin: profile?.linkedin || "",
+          portfolioUrl: profile?.portfolioUrl || "",
         };
         setUserData(combinedData);
-
       } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to fetch user details.");
+        setError(
+          err.response?.data?.message || "Failed to fetch user details."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -62,7 +66,11 @@ function EditUserPage() {
   }, [id]);
 
   if (isLoading) {
-    return <div className="text-center p-8 dark:text-gray-300">Loading user data...</div>;
+    return (
+      <div className="text-center p-8 dark:text-gray-300">
+        Loading user data...
+      </div>
+    );
   }
 
   if (error) {
@@ -70,19 +78,24 @@ function EditUserPage() {
   }
 
   if (!userData) {
-    return <div className="text-center p-8 dark:text-gray-300">User not found.</div>;
+    return (
+      <div className="text-center p-8 dark:text-gray-300">User not found.</div>
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl">
-            <div className="mb-4">
-                <Link to="/admin/users" className="text-blue-600 dark:text-blue-400 hover:underline">
-                    &larr; Back to User List
-                </Link>
-            </div>
-            <EditUserForm userData={userData} />
+      <div className="w-full max-w-2xl">
+        <div className="mb-4">
+          <Link
+            to="/admin/users"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            &larr; Back to User List
+          </Link>
         </div>
+        <EditUserForm userData={userData} />
+      </div>
     </div>
   );
 }
