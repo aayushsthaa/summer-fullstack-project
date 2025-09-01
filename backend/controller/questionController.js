@@ -2,6 +2,11 @@ const AnswerModel = require("../model/AnswerModel");
 const QuestionSet = require("../model/QuestionSetModel");
 
 async function listQuestionSetController(req, res) {
+  const user = req.user;
+  const profile = user.profile;
+  res.json({
+    profile: profile
+  })
   const questionSet = await QuestionSet.aggregate([
     {
       $lookup: {
