@@ -40,7 +40,6 @@ async function createUser(req, res) {
       email,
       username,
       password: encryptedPassword,
-      // role, googleId etc. can be added if your schema supports them
     };
 
     const user = new User(data);
@@ -80,8 +79,6 @@ async function loginUser(req, res) {
         .json({ message: "Email and password are required" });
     }
 
-    // If your schema has password: { select: false }, keep +password.
-    // Otherwise it's harmless.
     const user = await User.findOne({ email }).select("+password");
     if (!user || !user.password) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -97,8 +94,6 @@ async function loginUser(req, res) {
       JWT_SECRET,
       { expiresIn: "7d" }
     );
-
-    // standardized to "token" for frontend to read
     return res.status(200).json({
       message: "Login successful",
       token,
