@@ -16,7 +16,7 @@ interface IQuizAttempt {
   _id: string;
   questionSet: {
     title: string;
-  };
+  } | null;
   score: number;
   total: number;
   submittedAt: string;
@@ -162,7 +162,7 @@ function AuthHomePage() {
                   <li key={attempt._id} className="flex justify-between items-center gap-4">
                     <div>
                       <p className="font-semibold text-gray-800 dark:text-gray-200 truncate">
-                        {attempt.questionSet.title}
+                        {attempt.questionSet?.title || "Deleted Assessment"}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
                         {new Date(attempt.submittedAt).toLocaleDateString()}
