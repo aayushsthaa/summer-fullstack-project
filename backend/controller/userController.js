@@ -236,14 +236,14 @@ async function viewMyQuizAttemptsController(req,res){
     const { id: userId } = req.user;
     try {
         const attempts = await AnswerModel.find({ user: userId })
-            .sort({ submittedAt: -1 }) // Sort by most recent
-            .populate('questionSet', 'title')
+            .sort({ submittedAt: -1 })
             .select('questionSet questionSetTitle score total submittedAt');
 
         const formattedAttempts = attempts.map(attempt => ({
             _id: attempt._id,
+            questionSetId: attempt.questionSet,
             questionSet: {
-                title: attempt.questionSet ? attempt.questionSet.title : attempt.questionSetTitle,
+                title: attempt.questionSetTitle,
             },
             score: attempt.score,
             total: attempt.total,

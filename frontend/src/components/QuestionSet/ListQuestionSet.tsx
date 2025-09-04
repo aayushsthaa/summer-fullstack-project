@@ -22,9 +22,16 @@ interface IUserProfile {
     }
 }
 
+interface IAttempt {
+    _id: string;
+    questionSetId: string;
+}
+
+
 function ListQuestionSet() {
   const [suggestedSets, setSuggestedSets] = useState<IListQuestionSet[]>([]);
   const [otherSets, setOtherSets] = useState<IListQuestionSet[]>([]);
+  const [attempts, setAttempts] = useState<IAttempt[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const { isAuth, role } = useContext(AuthContext);
@@ -83,13 +90,23 @@ function ListQuestionSet() {
         setIsLoading(true);
         const headers = { Authorization: `Bearer ${accessToken}` };
         try {
-            const [setsRes, profileRes] = await Promise.all([
+            const promises = [
                 axios.get("http://localhost:3000/api/questions/set/list", { headers }),
                 axios.get("http://localhost:3000/users/profile/me", { headers })
-            ]);
+            ];
+
+            if (role === 'professional') {
+                promises.push(axios.get("http://localhost:3000/users/profile/me/attempts", { headers }));
+            }
+            
+            const [setsRes, profileRes, attemptsRes] = await Promise.all(promises);
 
             const allSets: IListQuestionSet[] = setsRes.data.questionSet;
             const userProfile: IUserProfile = profileRes.data;
+
+            if (role === 'professional' && attemptsRes) {
+                setAttempts(attemptsRes.data);
+            }
             
             const userSkills = userProfile.profile?.skills?.map(skill => skill.name.toLowerCase()) || [];
 
@@ -154,14 +171,22 @@ function ListQuestionSet() {
   }
   
   const AssessmentCard = ({ question }: { question: IListQuestionSet }) => {
-    const takeQuizHandler = () => {
-        navigate(`/questionset/${question._id}/attempt`);
+    const attempt = role === 'professional' ? attempts.find(a => a.questionSetId === question._id) : null;
+
+    const handleCardClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (attempt) {
+            navigate(`/profile/me/attempts/${attempt._id}`);
+        } else {
+            navigate(`/questionset/${question._id}/attempt`);
+        }
     };
+
     return (
         <div
             key={question._id}
             className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer"
-            onClick={takeQuizHandler}
+            onClick={handleCardClick}
         >
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-shrink-0 bg-blue-100 dark:bg-gray-700 p-3 rounded-lg">
@@ -197,26 +222,36 @@ function ListQuestionSet() {
             </div>
 
             <div className="w-full sm:w-auto flex-shrink-0 mt-4 sm:mt-0 flex gap-3 items-center">
-                <button
-                className="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-2"
-                aria-label={`Take test: ${question.title}`}
-                >
-                <span>Take Assessment</span>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                >
-                    <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                    />
-                </svg>
-                </button>
+                {attempt ? (
+                     <button
+                        className="w-full sm:w-auto bg-green-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300 flex items-center justify-center gap-2"
+                        aria-label={`View Review for: ${question.title}`}
+                    >
+                        <span>View Review</span>
+                    </button>
+                ) : (
+                    <button
+                        className="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-2"
+                        aria-label={`Take test: ${question.title}`}
+                    >
+                        <span>Take Assessment</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
+                            <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 5l7 7-7 7"
+                            />
+                        </svg>
+                    </button>
+                )}
+               
                 {isAuth && role === "admin" && (
                 <button
                     onClick={(e) => {

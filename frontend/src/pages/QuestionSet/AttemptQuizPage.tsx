@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AttemptQuizForm from "../../components/QuestionSet/AttemptQuizForm";
 
@@ -30,10 +30,9 @@ export interface IChoice {
 function AttemptQuizPage() {
   const { id } = useParams();
 
-  const [questionSets, setQuestionSet] = useState<IAttempQuestionForm | null>(
-    null
-  );
+  const [questionSets, setQuestionSet] = useState<IAttempQuestionForm | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,11 +51,13 @@ function AttemptQuizPage() {
         })
         .then((response) => {
           setQuestionSet(response?.data);
-          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Failed to fetch assessment data:", error);
-          setIsLoading(false);
+          setError(error.response?.data?.message || "Assessment not found or could not be loaded.");
+        })
+        .finally(() => {
+            setIsLoading(false);
         });
     }
 
@@ -66,22 +67,28 @@ function AttemptQuizPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <p className="text-gray-700 dark:text-gray-300 text-lg">
-          Loading Assessment...
-        </p>
+        <p className="text-gray-700 dark:text-gray-300 text-lg">Loading Assessment...</p>
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center text-center p-4">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
+                <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Access Denied</h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+                <Link to="/questionset/list" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300">
+                    Back to Assessments
+                </Link>
+            </div>
+        </div>
     );
   }
 
   return (
     <div>
-      {questionSets ? (
-        <AttemptQuizForm questionSet={questionSets} />
-      ) : (
-        <p className="text-center mt-10">
-          Assessment not found or could not be loaded.
-        </p>
-      )}
+      {questionSets ? <AttemptQuizForm questionSet={questionSets} /> : <p className="text-center mt-10">Assessment not found or could not be loaded.</p>}
     </div>
   );
 }

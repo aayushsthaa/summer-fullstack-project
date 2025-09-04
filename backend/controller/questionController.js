@@ -41,6 +41,15 @@ async function listQuestionSetController(req, res) {
 async function getQuestionSetController(req, res) {
   try {
     const { id } = req.params;
+    const { id: userId, role } = req.user;
+
+    if (role === 'professional') {
+        const existingAttempt = await AnswerModel.findOne({ user: userId, questionSet: id });
+        if (existingAttempt) {
+            return res.status(403).json({ message: "You have already completed this assessment and cannot retake it." });
+        }
+    }
+    
     const questionSet = await QuestionSet.findById(id)
       .populate("createdBy", "name")
       .select("-questions.choices.correctAnswer");
@@ -154,7 +163,7 @@ async function deleteQuestionSetController(req, res) {
       return res.status(404).json({ message: "Question set not found" });
     }
     await QuestionSet.findByIdAndDelete(id);
-    // We are NOT deleting the AnswerModel records, so users can still review their attempts.
+    // We are not deleting the AnswerModel records, so users can still review their attempts.
     // However, if we wanted to cascade delete, we would uncomment the next line.
     // await AnswerModel.deleteMany({ questionSet: id }); 
 
