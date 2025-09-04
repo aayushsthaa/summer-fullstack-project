@@ -13,7 +13,7 @@ function UnAuthHomePage() {
         {/* Content */}
         <div className="relative z-10 max-w-3xl">
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight ">
-            Learn Smarter, One Assessment at a Time!
+            Learn Smarter, One Question at a Time!
           </h1>
           <p className="mt-4 text-lg md:text-xl text-gray-200 ">
             Attempt assessments to test your knowledge and grow with others.
