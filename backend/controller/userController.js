@@ -40,7 +40,6 @@ async function createUser(req, res) {
       email,
       username,
       password: encryptedPassword,
-      // role, googleId etc. can be added if your schema supports them
     };
 
     const user = new User(data);
