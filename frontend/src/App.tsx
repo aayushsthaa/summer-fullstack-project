@@ -19,6 +19,7 @@ import AboutUsPage from "./pages/AboutUsPage";
 import PageNotFound from "./pages/PageNotFound";
 import UsersPage from "./pages/UsersPage";
 import ViewUserProfilePage from "./pages/ViewUserProfilePage";
+import AttemptReviewPage from "./pages/AttemptReviewPage";
 
 export interface IAuthState {
   isAuth: boolean;
@@ -39,6 +40,7 @@ export const AuthContext = createContext<IAuthContext>({
   role: "guest",
   setAuthState: () => {},
 });
+
 
 function App() {
   const [authState, setAuthState] = useState<IAuthState>({
@@ -82,7 +84,7 @@ function App() {
       >
         <NavBar />
         <Routes>
-          <Route path="*" element={<PageNotFound />} />
+          <Route path="*" element={<PageNotFound/>} />
           {/* GUEST & ALL AUTH Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
@@ -91,7 +93,7 @@ function App() {
             <>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/about" element={<AboutUsPage />} />
+              <Route path="/about" element={<AboutUsPage/>} />
             </>
           )}
 
@@ -99,6 +101,7 @@ function App() {
           {authState?.isAuth === true && (
             <>
               <Route path="/profile/me" element={<ProfilePage />} />
+              <Route path="/profile/me/attempts/:attemptId" element={<AttemptReviewPage />} />
               <Route path="/profile/:id" element={<ViewUserProfilePage />} />
               <Route path="/users/professionals" element={<UsersPage />} />
               <Route

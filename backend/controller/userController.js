@@ -79,8 +79,10 @@ async function loginUser(req, res) {
         .json({ message: "Email and password are required" });
     }
 
+    // If your schema has password: { select: false }, keep +password.
+    // Otherwise it's harmless.
     const user = await User.findOne({ email }).select("+password");
-    if (!user || !user.password) {
+    if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
@@ -94,6 +96,8 @@ async function loginUser(req, res) {
       JWT_SECRET,
       { expiresIn: "7d" }
     );
+
+    // standardized to "token" for frontend to read
     return res.status(200).json({
       message: "Login successful",
       token,
@@ -198,12 +202,11 @@ async function updateProfileMeController(req,res){
 async function viewMyProfileController(req,res){
   const { id } = req.user;
   try {
-      const user = await User.findById(id).select("+password");
+      const user = await User.findById(id).select("-password");
       if (!user) {
           return res.status(404).json({ message: "User not found" });
       }
-      
-      const hasPassword = !!user.password;
+
       const profile = await Profile.findOne({ user: id });
 
       // Calculate stats
@@ -223,10 +226,7 @@ async function viewMyProfileController(req,res){
           highestScore: Math.round(highestPercentage),
       };
       
-      const userResponse = user.toObject();
-      delete userResponse.password;
-
-      res.status(200).json({ user: userResponse, profile, stats, hasPassword });
+      res.status(200).json({ user, profile, stats });
   } catch (error) {
       console.error("View Profile Error:", error);
       res.status(500).json({ message: "Failed to fetch profile", error });
@@ -237,15 +237,41 @@ async function viewMyQuizAttemptsController(req,res){
     try {
         const attempts = await AnswerModel.find({ user: userId })
             .sort({ submittedAt: -1 }) // Sort by most recent
-            .populate('questionSet', 'title') // Populate the title from the QuestionSet model
-            .select('questionSet score total submittedAt'); // Select only needed fields
+            .populate('questionSet', 'title')
+            .select('questionSet questionSetTitle score total submittedAt');
 
-        res.status(200).json(attempts);
+        const formattedAttempts = attempts.map(attempt => ({
+            _id: attempt._id,
+            questionSet: {
+                title: attempt.questionSet ? attempt.questionSet.title : attempt.questionSetTitle,
+            },
+            score: attempt.score,
+            total: attempt.total,
+            submittedAt: attempt.submittedAt,
+        }));
+
+        res.status(200).json(formattedAttempts);
     } catch (error) {
         console.error("Fetch Quiz Attempts Error:", error);
         res.status(500).json({ message: "Failed to fetch quiz attempts", error });
     }
 }
+
+async function getQuizAttemptDetailsController(req, res) {
+    const { attemptId } = req.params;
+    const { id: userId } = req.user;
+    try {
+        const attempt = await AnswerModel.findOne({ _id: attemptId, user: userId });
+        if (!attempt) {
+            return res.status(404).json({ message: "Attempt not found or you do not have permission to view it." });
+        }
+        res.status(200).json(attempt);
+    } catch (error) {
+        console.error("Fetch Quiz Attempt Details Error:", error);
+        res.status(500).json({ message: "Failed to fetch quiz attempt details", error });
+    }
+}
+
 async function viewProfileofUserController(req,res){
   const { id } = req.params;
   try {
@@ -307,88 +333,6 @@ async function listProfessionalsController(req, res) {
   }
 }
 
-async function changePasswordController(req, res) {
-  const { id } = req.user;
-  const { currentPassword, newPassword, confirmPassword } = req.body;
-
-  if (!currentPassword || !newPassword || !confirmPassword) {
-    return res.status(400).json({ message: "All password fields are required." });
-  }
-
-  if (newPassword !== confirmPassword) {
-    return res.status(400).json({ message: "New password and confirmation do not match." });
-  }
-  
-  if (newPassword.length < 6) {
-      return res.status(400).json({ message: "New password must be at least 6 characters long." });
-  }
-
-  try {
-    const user = await User.findById(id).select("+password");
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-    
-    if (!user.password) {
-      return res.status(400).json({ message: "Account does not have a password. Please use the 'Set Password' feature." });
-    }
-
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Incorrect current password." });
-    }
-
-    const encryptedPassword = await bcrypt.hash(newPassword, saltRounds);
-    user.password = encryptedPassword;
-    await user.save();
-
-    res.status(200).json({ message: "Password updated successfully." });
-
-  } catch (error) {
-    console.error("Change Password Error:", error);
-    res.status(500).json({ message: "Failed to change password.", error });
-  }
-}
-
-async function setPasswordController(req, res) {
-  const { id } = req.user;
-  const { newPassword, confirmPassword } = req.body;
-
-  if (!newPassword || !confirmPassword) {
-    return res.status(400).json({ message: "All password fields are required." });
-  }
-
-  if (newPassword !== confirmPassword) {
-    return res.status(400).json({ message: "New password and confirmation do not match." });
-  }
-  
-  if (newPassword.length < 6) {
-      return res.status(400).json({ message: "New password must be at least 6 characters long." });
-  }
-
-  try {
-    const user = await User.findById(id).select("+password");
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-    
-    // Prevent users with a password from using this endpoint
-    if (user.password) {
-        return res.status(400).json({ message: "Account already has a password. Please use the 'Change Password' feature." });
-    }
-
-    const encryptedPassword = await bcrypt.hash(newPassword, saltRounds);
-    user.password = encryptedPassword;
-    await user.save();
-
-    res.status(200).json({ message: "Password set successfully." });
-
-  } catch (error) {
-    console.error("Set Password Error:", error);
-    res.status(500).json({ message: "Failed to set password.", error });
-  }
-}
-
 module.exports = {
   getUser,
   createUser,
@@ -397,8 +341,7 @@ module.exports = {
   updateProfileMeController,
   viewMyProfileController,
   viewMyQuizAttemptsController,
+  getQuizAttemptDetailsController,
   viewProfileofUserController,
   listProfessionalsController,
-  changePasswordController,
-  setPasswordController,
 };

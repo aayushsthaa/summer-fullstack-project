@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileForm, { type IProfileData } from "../components/Profile/ProfileForm";
 import SocialLink from "../components/Profile/SocialLink";
+import { Link } from "react-router-dom";
 
 interface IQuizAttempt {
   _id: string;
-  questionSet: { _id: string; title: string } | null;
+  questionSet: { _id: string; title: string };
   score: number;
   total: number;
   submittedAt: string;
@@ -169,21 +170,26 @@ function ProfilePage() {
               {quizAttempts.length > 0 ? (
                 <ul className="space-y-4">
                   {quizAttempts.map(attempt => (
-                    <li key={attempt._id} className="p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 flex justify-between items-center flex-wrap gap-4">
-                      <div>
-                        <p className="font-semibold text-gray-800 dark:text-gray-200">{attempt.questionSet?.title || "Deleted Assessment"}</p>
+                    <li key={attempt._id} className="p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 flex justify-between items-center flex-wrap gap-x-4 gap-y-2">
+                      <div className="flex-grow">
+                        <p className="font-semibold text-gray-800 dark:text-gray-200">{attempt.questionSet.title}</p>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Completed on {new Date(attempt.submittedAt).toLocaleDateString()}</p>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right flex-shrink-0">
                         <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{attempt.score} / {attempt.total}</p>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Score</p>
                       </div>
+                       <div className="w-full sm:w-auto">
+                        <Link to={`/profile/me/attempts/${attempt._id}`} className="inline-block w-full text-center bg-blue-50 dark:bg-gray-600 text-blue-700 dark:text-blue-300 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 dark:hover:bg-gray-500 transition-colors text-sm">
+                            View Review
+                        </Link>
+                       </div>
                     </li>
                   ))}
                 </ul>
               ) : (
                 <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-                  You haven't attempted any assessments yet. <a href="/#/questionset/list" className="text-blue-600 dark:text-blue-400 hover:underline font-semibold">Explore Assessments</a>
+                  You haven't attempted any assessments yet. <a href="/questionset/list" className="text-blue-600 dark:text-blue-400 hover:underline font-semibold">Explore Assessments</a>
                 </p>
               )}
             </div>

@@ -6,6 +6,10 @@ const AnswerSchema = new mongoose.Schema({
     ref: "QuestionSet",
     required: true,
   },
+  questionSetTitle: {
+    type: String,
+    required: true,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
