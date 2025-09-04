@@ -202,12 +202,22 @@ async function updateProfileMeController(req,res){
 async function viewMyProfileController(req,res){
   const { id } = req.user;
   try {
-      const user = await User.findById(id).select("-password");
+      const user = await User.findById(id).select("+password");
       if (!user) {
           return res.status(404).json({ message: "User not found" });
       }
 
       const profile = await Profile.findOne({ user: id });
+      
+      const hasPassword = !!user.password;
+
+      const userToSend = {
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+      }
 
       // Calculate stats
       const allAttempts = await AnswerModel.find({ user: id });
@@ -226,7 +236,7 @@ async function viewMyProfileController(req,res){
           highestScore: Math.round(highestPercentage),
       };
       
-      res.status(200).json({ user, profile, stats });
+      res.status(200).json({ user: userToSend, profile, stats, hasPassword });
   } catch (error) {
       console.error("View Profile Error:", error);
       res.status(500).json({ message: "Failed to fetch profile", error });
@@ -334,6 +344,44 @@ async function listProfessionalsController(req, res) {
   }
 }
 
+async function changePasswordController(req, res) {
+    const { id } = req.user;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!newPassword || newPassword.length < 6) {
+        return res.status(400).json({ message: "New password must be at least 6 characters long." });
+    }
+
+    try {
+        const user = await User.findById(id).select("+password");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // If user has a password, verify the current one
+        if (user.password) {
+            if (!currentPassword) {
+                return res.status(400).json({ message: "Current password is required." });
+            }
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(401).json({ message: "Incorrect current password." });
+            }
+        }
+
+        // Hash and set the new password
+        const encryptedPassword = await bcrypt.hash(newPassword, saltRounds);
+        user.password = encryptedPassword;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully." });
+
+    } catch (error) {
+        console.error("Change Password Error:", error);
+        res.status(500).json({ message: "Failed to change password", error });
+    }
+}
+
 module.exports = {
   getUser,
   createUser,
@@ -345,4 +393,5 @@ module.exports = {
   getQuizAttemptDetailsController,
   viewProfileofUserController,
   listProfessionalsController,
+  changePasswordController,
 };

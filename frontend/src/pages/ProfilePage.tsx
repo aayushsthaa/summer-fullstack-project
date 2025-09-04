@@ -3,6 +3,7 @@ import axios from "axios";
 import ProfileForm, { type IProfileData } from "../components/Profile/ProfileForm";
 import SocialLink from "../components/Profile/SocialLink";
 import { Link } from "react-router-dom";
+import ChangePasswordModal from "../components/Profile/ChangePasswordModal";
 
 interface IQuizAttempt {
   _id: string;
@@ -38,6 +39,8 @@ function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [hasPassword, setHasPassword] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +56,7 @@ function ProfilePage() {
         const profileRes = await axios.get("http://localhost:3000/users/profile/me", { headers });
         const attemptsRes = await axios.get("http://localhost:3000/users/profile/me/attempts", { headers });
 
-        const { user, profile, stats } = profileRes.data;
+        const { user, profile, stats, hasPassword } = profileRes.data;
         setProfileData({
           name: user.name || "",
           username: user.username || "",
@@ -65,6 +68,7 @@ function ProfilePage() {
           skills: profile?.skills || [],
         });
         setStats(stats);
+        setHasPassword(hasPassword);
         setQuizAttempts(attemptsRes.data);
       } catch (err) {
         console.error(err);
@@ -136,9 +140,14 @@ function ProfilePage() {
             {/* Actions Card */}
             <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Actions</h2>
-              <button onClick={() => setIsModalOpen(true)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
-                Edit Profile
-              </button>
+              <div className="space-y-3">
+                <button onClick={() => setIsModalOpen(true)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
+                  Edit Profile
+                </button>
+                <button onClick={() => setIsPasswordModalOpen(true)} className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-3 rounded-lg transition-colors">
+                  {hasPassword ? 'Change Password' : 'Create Password'}
+                </button>
+              </div>
             </div>
 
             {/* Statistics Card */}
@@ -189,7 +198,7 @@ function ProfilePage() {
                 </ul>
               ) : (
                 <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-                  You haven't attempted any assessments yet. <a href="/questionset/list" className="text-blue-600 dark:text-blue-400 hover:underline font-semibold">Explore Assessments</a>
+                  You haven't attempted any assessments yet. <a href="/#/questionset/list" className="text-blue-600 dark:text-blue-400 hover:underline font-semibold">Explore Assessments</a>
                 </p>
               )}
             </div>
@@ -202,6 +211,15 @@ function ProfilePage() {
         onClose={() => setIsModalOpen(false)}
         profileData={profileData}
         onUpdate={handleProfileUpdate}
+      />
+      <ChangePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        hasPassword={hasPassword}
+        onSuccess={() => {
+            setIsPasswordModalOpen(false);
+            setHasPassword(true);
+        }}
       />
     </>
   );
