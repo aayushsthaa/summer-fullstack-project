@@ -40,6 +40,7 @@ async function createUser(req, res) {
       email,
       username,
       password: encryptedPassword,
+      // role, googleId etc. can be added if your schema supports them
     };
 
     const user = new User(data);
@@ -261,7 +262,8 @@ async function getQuizAttemptDetailsController(req, res) {
     const { attemptId } = req.params;
     const { id: userId } = req.user;
     try {
-        const attempt = await AnswerModel.findOne({ _id: attemptId, user: userId });
+        const attempt = await AnswerModel.findOne({ _id: attemptId, user: userId })
+            .populate('questionSet');
         if (!attempt) {
             return res.status(404).json({ message: "Attempt not found or you do not have permission to view it." });
         }
