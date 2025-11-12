@@ -57,7 +57,7 @@ function App() {
             authorization: `Bearer ${accessToken}`,
           },
         })
-        .then((res) => {
+        .then(() => {
           if (accessToken) {
             const { role }: JwtDecode = jwtDecode(accessToken);
             setAuthState((prev) => ({

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import GithubIcon from "../icons/GithubIcon";
 import LinkedInIcon from "../icons/LinkedInIcon";
 import PortfolioIcon from "../icons/PortFolioIcon";

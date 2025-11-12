@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function AboutUs() {
   return (
     <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">

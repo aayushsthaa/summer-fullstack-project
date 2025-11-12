@@ -14,7 +14,7 @@ function EditUserForm({ userData }: EditUserFormProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
 
-  const { register, handleSubmit, control, reset, getValues, formState: { errors } } = useForm<IEditableUserData>({
+  const { register, handleSubmit, control, reset, getValues } = useForm<IEditableUserData>({
     defaultValues: userData,
   });
 
