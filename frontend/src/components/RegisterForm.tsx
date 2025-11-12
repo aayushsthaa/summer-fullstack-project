@@ -102,7 +102,7 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   return (
     <>
-      <div className="form-container w-full min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center px-4 py-8">
+      <div className="form-container w-full min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center sm:px-4 sm:py-8">
         <div className="flex flex-col justify-center gap-4 sm:gap-6 w-full max-w-xl bg-white dark:bg-gray-900 dark:text-white rounded-lg border border-gray-200 dark:border-0 drop-shadow-2xl dark:sm:drop-shadow-gray-500 p-6 sm:p-8 md:p-10">
           <h2 className="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-500 text-center">
             Create an account
