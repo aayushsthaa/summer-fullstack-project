@@ -173,16 +173,16 @@ function CreateQuestionSetForm() {
                 <CreateQuestions />
               </div>
 
-              <div className="flex justify-end gap-4">
+              <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 sm:gap-4">
                 <Link
                   to="/questionset/list"
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 font-bold py-3 px-8 rounded-full transition-colors duration-300"
+                  className="flex-1 sm:flex-none bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 font-bold py-3 px-8 rounded-full transition-colors duration-300 text-center"
                 >
                   Cancel
                 </Link>
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 ease-in-out shadow-md transform hover:scale-105"
+                  className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 ease-in-out shadow-md transform hover:scale-105"
                 >
                   Create Assessment
                 </button>

@@ -57,39 +57,39 @@ function UnAuthHomePage() {
       </section>
 
       {/* Online Learning Expertise Section */}
-      <section className="py-16 px-6 bg-gray-100 dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+      <section className="py-12 sm:py-16 px-6 bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Left Image */}
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-center md:justify-start">
             <img
               src={learningImage}
               alt="Learning Expertise"
-              className="w-full max-w-sm sm:max-w-md lg:max-w-2xl"
+              className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl"
             />
           </div>
           {/* Right Content */}
-          <div className="flex-1 text-left">
+          <div className="flex-1 text-center md:text-left">
             <h4 className="text-blue-600 font-semibold uppercase tracking-wide mb-2">
               Learn Anything
             </h4>
-            <h2 className="text-3xl font-bold mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">
               Benefits About Online Learning Expertise
             </h2>
-            <div className="space-y-6">
-              <div className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-0">
-                <h3 className="text-lg font-semibold mb-1">Online Courses</h3>
+            <div className="space-y-4 sm:space-y-6">
+              <div className="p-3 sm:p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-0 rounded-lg">
+                <h3 className="text-base sm:text-lg font-semibold mb-1">Online Courses</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Access a wide range of interactive and engaging online courses.
                 </p>
               </div>
-              <div className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-0">
-                <h3 className="text-lg font-semibold mb-1">Earn Certificates</h3>
+              <div className="p-3 sm:p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-0 rounded-lg">
+                <h3 className="text-base sm:text-lg font-semibold mb-1">Earn Certificates</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Showcase your achievements with recognized certificates.
                 </p>
               </div>
-              <div className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-0">
-                <h3 className="text-lg font-semibold mb-1">Learn with Experts</h3>
+              <div className="p-3 sm:p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-0 rounded-lg">
+                <h3 className="text-base sm:text-lg font-semibold mb-1">Learn with Experts</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Gain knowledge directly from experienced instructors.
                 </p>

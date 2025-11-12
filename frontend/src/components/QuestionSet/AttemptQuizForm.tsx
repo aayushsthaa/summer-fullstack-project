@@ -129,17 +129,17 @@ function AttemptQuizForm({
 
               <CreateQuestions />
 
-              <div className="flex justify-center items-center pt-4 gap-4">
+              <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center pt-4 gap-3 sm:gap-4">
                 <button
                   type="button"
                   onClick={() => setCancelModalOpen(true)}
-                  className="w-full md:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 font-bold py-4 px-12 rounded-full transition-colors"
+                  className="flex-1 sm:flex-none bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 font-bold py-3 sm:py-4 px-8 sm:px-12 rounded-full transition-colors text-sm sm:text-base"
                 >
                   Cancel Assessment
                 </button>
                 <button
                   type="submit"
-                  className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-full transition-all duration-300 ease-in-out shadow-lg transform hover:scale-105"
+                  className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 sm:py-4 px-8 sm:px-12 rounded-full transition-all duration-300 ease-in-out shadow-lg transform hover:scale-105 text-sm sm:text-base"
                 >
                   Submit Answers
                 </button>

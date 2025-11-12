@@ -161,7 +161,7 @@ function ListQuestionSet() {
         {isAuth && role === "admin" && (
           <NavLink
             to="/admin/questionset/create"
-            className="hover:text-gray-200 text-white transition-colors duration-300 px-4 py-2 rounded-2xl bg-blue-700"
+            className="hover:text-gray-200 text-white transition-colors duration-300 px-6 py-3 rounded-2xl bg-blue-700 font-semibold text-center"
           >
             Create Assessment
           </NavLink>
@@ -221,17 +221,17 @@ function ListQuestionSet() {
                 </div>
             </div>
 
-            <div className="w-full sm:w-auto flex-shrink-0 mt-4 sm:mt-0 flex gap-3 items-center">
+            <div className="w-full sm:w-auto flex-shrink-0 mt-4 sm:mt-0 flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center">
                 {attempt ? (
                      <button
-                        className="w-full sm:w-auto bg-green-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300 flex items-center justify-center gap-2"
+                        className="flex-1 sm:flex-none bg-green-600 text-white font-semibold py-2 px-4 sm:px-5 rounded-full hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"
                         aria-label={`View Review for: ${question.title}`}
                     >
                         <span>View Review</span>
                     </button>
                 ) : (
                     <button
-                        className="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-5 rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-2"
+                        className="flex-1 sm:flex-none bg-blue-600 text-white font-semibold py-2 px-4 sm:px-5 rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"
                         aria-label={`Take test: ${question.title}`}
                     >
                         <span>Take Assessment</span>
@@ -251,14 +251,14 @@ function ListQuestionSet() {
                         </svg>
                     </button>
                 )}
-               
+
                 {isAuth && role === "admin" && (
                 <button
                     onClick={(e) => {
                     e.stopPropagation();
                     openDeleteModal(question._id, question.title);
                     }}
-                    className="p-2 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
+                    className="flex-shrink-0 p-2 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
                     aria-label={`Delete assessment: ${question.title}`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -276,14 +276,14 @@ function ListQuestionSet() {
     <>
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-12">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-10">
-          <h2 className="text-4xl font-extrabold text-blue-700 dark:text-white">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-10">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-blue-700 dark:text-white">
             Assessments
           </h2>
           {isAuth && role === "admin" && (
             <NavLink
               to="/admin/questionset/create"
-              className="hover:text-gray-200 text-white transition-colors duration-300 px-4 py-2 rounded-2xl bg-blue-700"
+              className="w-full sm:w-auto hover:text-gray-200 text-white transition-colors duration-300 px-4 py-2 rounded-2xl bg-blue-700 text-center font-semibold text-sm sm:text-base"
             >
               Create Assessment
             </NavLink>

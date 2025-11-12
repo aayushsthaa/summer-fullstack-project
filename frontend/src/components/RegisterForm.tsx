@@ -102,17 +102,16 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   return (
     <>
-      <div className="form-container w-full h-full mt-4 bg-white dark:bg-gray-900 flex items-center justify-center">
-        <div className="flex flex-col justify-center gap-6 px-4 py-8 sm:p-8 md:p-10 bg-white dark:bg-gray-900 dark:text-white mx-auto rounded-lg border border-gray-200 dark:border-0 drop-shadow-2xl dark:sm:drop-shadow-gray-500  w-full max-w-xl">
-          <div className="w-full"></div>
-          <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-500 text-center">
+      <div className="form-container w-full min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center px-4 py-8">
+        <div className="flex flex-col justify-center gap-4 sm:gap-6 w-full max-w-xl bg-white dark:bg-gray-900 dark:text-white rounded-lg border border-gray-200 dark:border-0 drop-shadow-2xl dark:sm:drop-shadow-gray-500 p-6 sm:p-8 md:p-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-500 text-center">
             Create an account
           </h2>
           <p className="text-sm text-gray-500 dark:text-white text-center">
             Create a new account to get started
           </p>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <input
                 type="text"
                 name="firstName"
@@ -154,8 +153,8 @@ function RegisterForm() {
               required
             />
             <FormBtn name="Register" />
-            <p className="text-md text-gray-500 dark:text-white">
-              Already have an account?
+            <p className="text-sm sm:text-md text-gray-500 dark:text-white text-center">
+              Already have an account?{" "}
               <Link
                 to="/login"
                 className="text-blue-700 hover:underline hover:text-blue-500 dark:text-blue-300"
@@ -164,16 +163,16 @@ function RegisterForm() {
               </Link>
             </p>
           </form>
-          <div className="flex items-center justify-between">
-            <hr className="w-full border-gray-300" />
-            <span className="px-2 text-gray-500 dark:text-white shrink-0">
+          <div className="flex items-center justify-between my-4">
+            <hr className="flex-1 border-gray-300" />
+            <span className="px-3 text-xs sm:text-sm text-gray-500 dark:text-white shrink-0">
               Or continue with
             </span>
-            <hr className="w-full border-gray-300" />
+            <hr className="flex-1 border-gray-300" />
           </div>
-          <div className="flex flex-col justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
             <button
-              className="w-full flex gap-2 items-center justify-center px-4 py-3 flex-1 rounded-md hover:bg-gray-200 dark:bg-zinc-100 dark:text-black border border-gray-300 dark:border-0 text-sm sm:text-base"
+              className="w-full flex gap-2 items-center justify-center px-4 py-3 rounded-md hover:bg-gray-200 dark:bg-zinc-100 dark:text-black border border-gray-300 dark:border-0 text-sm sm:text-base font-medium"
               onClick={() => login()}
             >
               <img
@@ -183,7 +182,7 @@ function RegisterForm() {
               />
               Continue with Google
             </button>
-            <button className="px-4 py-3 flex-1 rounded-md hover:bg-blue-500 bg-blue-700 text-white w-full flex gap-2 items-center justify-center text-sm sm:text-base">
+            <button className="w-full flex gap-2 items-center justify-center px-4 py-3 rounded-md hover:bg-blue-500 bg-blue-700 text-white text-sm sm:text-base font-medium">
               <img
                 src={facebookIcon}
                 alt="facebook"
@@ -192,7 +191,7 @@ function RegisterForm() {
               Continue with Facebook
             </button>
           </div>
-          <p className="text-md text-gray-500 dark:text-white">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-white text-center mt-4">
             By registering, you agree to our{" "}
             <a
               href="#"
