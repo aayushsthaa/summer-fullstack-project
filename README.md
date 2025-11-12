@@ -5,11 +5,17 @@
 <h2>🚀 Demo</h2>
 
 [https://education-university.onrender.com](https://education-university.onrender.com)
-<pre><code>
-Username: admin
-Email: admin@gmail.com
-Password: 111111
-</code></pre>
+<p><strong>Demo Credentials:</strong></p>
+
+<p>Username:</p>
+<pre><code>admin</code></pre>
+
+<p>Email:</p>
+<pre><code>admin@gmail.com</code></pre>
+
+<p>Password:</p>
+<pre><code>1111</code></pre>
+
   
 <h2>🧐 Features</h2>
 
