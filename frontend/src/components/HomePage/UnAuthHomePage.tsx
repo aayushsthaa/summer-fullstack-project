@@ -7,29 +7,29 @@ function UnAuthHomePage() {
     <div className="min-h-screen flex flex-col text-gray-900 dark:bg-gray-900 dark:text-gray-100 transtion-colors bg-gray-50">
       {/* Hero */}
       <section
-        className="relative w-full h-[85vh] flex items-center justify-center text-center px-6 bg-cover bg-center "
+        className="relative w-full h-[70vh] sm:h-[80vh] lg:h-[85vh] flex items-center justify-center text-center px-6 bg-cover bg-center "
         style={{ backgroundImage: `url(${heroImage})` }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 bg-opacity-40" />
         {/* Content */}
         <div className="relative z-10 max-w-3xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight ">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight ">
             Learn Smarter, One Question at a Time!
           </h1>
-          <p className="mt-4 text-lg md:text-xl text-gray-200 ">
+          <p className="mt-4 text-base sm:text-lg md:text-xl text-gray-200 ">
             Attempt assessments to test your knowledge and grow with others.
           </p>
-          <div className="mt-8 flex justify-center gap-4 flex-wrap">
+          <div className="mt-6 sm:mt-8 flex justify-center gap-4 flex-wrap">
             <Link
               to="/login"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow shadow-md"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-lg shadow shadow-md text-sm sm:text-base"
             >
               Login
             </Link>
             <Link
               to="/about"
-              className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg shadow shadow-md"
+              className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-lg shadow shadow-md text-sm sm:text-base"
             >
               About us
             </Link>
@@ -64,7 +64,7 @@ function UnAuthHomePage() {
             <img
               src={learningImage}
               alt="Learning Expertise"
-              className=" max-w-2xl"
+              className="w-full max-w-sm sm:max-w-md lg:max-w-2xl"
             />
           </div>
           {/* Right Content */}
@@ -118,14 +118,14 @@ function UnAuthHomePage() {
       {/* Footer */}
       <footer className="py-8 px-6 bg-white dark:bg-gray-900 text-black dark:text-gray-400 text-center mt-auto">
         <p>&copy; {new Date().getFullYear()} Education University. All rights reserved</p>
-        <div className="mt-3 flex justify-center gap-6 text-sm">
-          <Link to="#" className="dark:hover:text-white hover:text-blue-500 text-sm">
+        <div className="mt-3 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 text-sm">
+          <Link to="#" className="dark:hover:text-white hover:text-blue-500">
             Privacy policy
           </Link>
-          <Link to="#" className="dark:hover:text-white hover:text-blue-500 text-sm">
+          <Link to="#" className="dark:hover:text-white hover:text-blue-500">
             Terms
           </Link>
-          <Link to="/about" className="dark:hover:text-white hover:text-blue-500 text-sm">
+          <Link to="/about" className="dark:hover:text-white hover:text-blue-500">
             About Us
           </Link>
         </div>

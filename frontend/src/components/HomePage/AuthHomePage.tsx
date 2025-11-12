@@ -104,19 +104,19 @@ function AuthHomePage() {
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Welcome Section */}
         <div className="flex flex-col lg:flex-row items-center gap-6 justify-center">
-          <div className="flex-1">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">
+          <div className="flex-1 text-center lg:text-left">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white">
               Welcome back, {profile?.user.name}!
             </h1>
-            <p className="mt-2 text-lg text-gray-500 dark:text-gray-400">
+            <p className="mt-2 text-base lg:text-lg text-gray-500 dark:text-gray-400">
               Ready to test your knowledge? Let's get started.
             </p>
           </div>
-          <div className="flex-shrink-0 lg:mr-60">
+          <div className="flex-shrink-0">
             <img
               src={testSvg}
               alt="Assessment Illustration"
-              className="w-48 h-48"
+              className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48"
             />
           </div>
         </div>
@@ -128,17 +128,17 @@ function AuthHomePage() {
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">
               Your Statistics
             </h2>
-            <div className="grid grid-cols-3 text-center gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 text-center gap-4">
               <div>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{userStats.totalAttempts}</p>
+                <p className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{userStats.totalAttempts}</p>
                 <p className="text-gray-500 dark:text-gray-400 text-sm">Attempts</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">{userStats.averageScore}%</p>
+                <p className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">{userStats.averageScore}%</p>
                 <p className="text-gray-500 dark:text-gray-400 text-sm">Average</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{userStats.highestScore}%</p>
+                <p className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">{userStats.highestScore}%</p>
                 <p className="text-gray-500 dark:text-gray-400 text-sm">Highest</p>
               </div>
             </div>

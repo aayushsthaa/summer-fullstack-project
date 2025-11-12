@@ -171,9 +171,9 @@ function RegisterForm() {
             </span>
             <hr className="w-full border-gray-300" />
           </div>
-          <div className="flex  flex-col justify-between gap-4 ">
+          <div className="flex flex-col justify-between gap-3 sm:gap-4">
             <button
-              className="w-full flex gap-2 items-center justify-center px-4 py-2 flex-1 rounded-md hover:bg-gray-200 dark:bg-zinc-100 dark:text-black border border-gray-300 dark:border-0"
+              className="w-full flex gap-2 items-center justify-center px-4 py-3 flex-1 rounded-md hover:bg-gray-200 dark:bg-zinc-100 dark:text-black border border-gray-300 dark:border-0 text-sm sm:text-base"
               onClick={() => login()}
             >
               <img
@@ -183,7 +183,7 @@ function RegisterForm() {
               />
               Continue with Google
             </button>
-            <button className="px-4 py-2 flex-1 rounded-md hover:bg-blue-500 bg-blue-700 text-white w-full flex gap-2 items-center justify-center">
+            <button className="px-4 py-3 flex-1 rounded-md hover:bg-blue-500 bg-blue-700 text-white w-full flex gap-2 items-center justify-center text-sm sm:text-base">
               <img
                 src={facebookIcon}
                 alt="facebook"

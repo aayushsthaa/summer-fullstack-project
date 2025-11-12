@@ -110,8 +110,9 @@ function NavBar() {
           className={`fixed top-24 right-0 w-full h-[calc(100vh-6rem)] bg-white dark:bg-gray-950 dark:text-white transform transition-transform duration-300 ease-in-out z-50 sm:hidden ${
             isOpen ? "translate-x-0" : "translate-x-full"
           }`}
+          onClick={closeNav}
         >
-          <nav className="flex flex-col items-center justify-center h-full gap-8 text-lg">
+          <nav className="flex flex-col items-center justify-center h-full gap-8 text-lg" onClick={(e) => e.stopPropagation()}>
             <NavLink to="/" onClick={closeNav} className="hover:text-blue-400">
               Home
             </NavLink>
