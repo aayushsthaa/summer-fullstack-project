@@ -1,3 +1,5 @@
+import aboutUsImage from "../assets/AboutUs.jpg";
+
 export default function AboutUs() {
   return (
     <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
@@ -22,7 +24,7 @@ export default function AboutUs() {
 
         <div className="space-y-6">
           <img
-            src="/src/assets/AboutUs.jpg"
+            src={aboutUsImage}
             alt="Working"
             className="rounded-2xl shadow-lg w-full h-90 object-cover  "
           />

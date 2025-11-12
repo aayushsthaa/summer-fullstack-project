@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import heroImage from "../../assets/hero-image.jpg";
+import learningImage from "../../assets/learning.jpg";
 
 function UnAuthHomePage() {
   return (
@@ -6,7 +8,7 @@ function UnAuthHomePage() {
       {/* Hero */}
       <section
         className="relative w-full h-[85vh] flex items-center justify-center text-center px-6 bg-cover bg-center "
-        style={{ backgroundImage: "url('src/assets/hero-image.jpg')" }}
+        style={{ backgroundImage: `url(${heroImage})` }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 bg-opacity-40" />
@@ -60,7 +62,7 @@ function UnAuthHomePage() {
           {/* Left Image */}
           <div className="flex-1 flex justify-center">
             <img
-              src="src/assets/learning.jpg"
+              src={learningImage}
               alt="Learning Expertise"
               className=" max-w-2xl"
             />

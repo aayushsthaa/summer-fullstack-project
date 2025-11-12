@@ -5,6 +5,7 @@ import UserCard from "../UserCard";
 import type { IUser } from "../../pages/UsersPage";
 import { jwtDecode } from "jwt-decode";
 import type { JwtDecode as AppJwtDecode } from "../../App";
+import testSvg from "../../assets/test.svg";
 
 interface IProfileData {
   user: {
@@ -113,7 +114,7 @@ function AuthHomePage() {
           </div>
           <div className="flex-shrink-0 lg:mr-60">
             <img
-              src="./src/assets/test.svg"
+              src={testSvg}
               alt="Assessment Illustration"
               className="w-48 h-48"
             />

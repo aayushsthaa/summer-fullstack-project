@@ -6,6 +6,8 @@ import FormBtn from "./FormBtn";
 import { AuthContext, type JwtDecode } from "../App";
 import { jwtDecode } from "jwt-decode";
 import Modal from "./Modal";
+import googleIcon from "../assets/google.png";
+import facebookIcon from "../assets/facebook.png";
 
 function RegisterForm() {
   const navigate = useNavigate();
@@ -175,7 +177,7 @@ function RegisterForm() {
               onClick={() => login()}
             >
               <img
-                src="./src/assets/google.png"
+                src={googleIcon}
                 alt="google"
                 className="w-5 h-5"
               />
@@ -183,7 +185,7 @@ function RegisterForm() {
             </button>
             <button className="px-4 py-2 flex-1 rounded-md hover:bg-blue-500 bg-blue-700 text-white w-full flex gap-2 items-center justify-center">
               <img
-                src="./src/assets/facebook.png"
+                src={facebookIcon}
                 alt="facebook"
                 className="w-6 h-6"
               />
