@@ -54,7 +54,7 @@ function AttemptReviewPage() {
             }
 
             try {
-                const res = await axios.get(`http://localhost:3000/users/profile/me/attempts/${attemptId}`, {
+                const res = await axios.get(`https://education-university-backend.onrender.com/users/profile/me/attempts/${attemptId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setAttempt(res.data);

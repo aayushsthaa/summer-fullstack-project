@@ -19,7 +19,7 @@ function ChangePasswordModal({ isOpen, onClose, hasPassword, onSuccess }: Change
   const onSubmit = async (data: any) => {
     const accessToken = localStorage.getItem("token");
     try {
-      await axios.put("http://localhost:3000/users/profile/me/password", data, {
+      await axios.put("https://education-university-backend.onrender.com/users/profile/me/password", data, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setNotificationModal({ isOpen: true, title: "Success", message: "Password updated successfully.", type: "success" });

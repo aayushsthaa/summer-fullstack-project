@@ -52,7 +52,7 @@ function App() {
     const accessToken = localStorage.getItem("token");
     async function fetchData() {
       axios
-        .get("http://localhost:3000/api/verify/me", {
+        .get("https://education-university-backend.onrender.com/api/verify/me", {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },

@@ -71,7 +71,7 @@ function CreateUserForm() {
   const onSubmit = async (data: CreateUserFormData) => {
     const accessToken = localStorage.getItem("token");
     try {
-      await axios.post("http://localhost:3000/api/admin/user/create", data, {
+      await axios.post("https://education-university-backend.onrender.com/api/admin/user/create", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

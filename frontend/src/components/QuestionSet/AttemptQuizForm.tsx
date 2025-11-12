@@ -57,7 +57,7 @@ function AttemptQuizForm({
     };
 
     axios
-      .post("http://localhost:3000/api/questions/answer/attempt", finalData, {
+      .post("https://education-university-backend.onrender.com/api/questions/answer/attempt", finalData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

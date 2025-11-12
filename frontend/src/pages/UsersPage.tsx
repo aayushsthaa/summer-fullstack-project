@@ -40,7 +40,7 @@ function UsersPage() {
 
       try {
         const res = await axios.get(
-          "http://localhost:3000/users/professionals",
+          "https://education-university-backend.onrender.com/users/professionals",
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }

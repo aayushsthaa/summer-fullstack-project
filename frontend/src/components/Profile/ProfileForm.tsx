@@ -89,7 +89,7 @@ function ProfileForm({
     const accessToken = localStorage.getItem("token");
     try {
       const res = await axios.put(
-        "http://localhost:3000/users/profile/me",
+        "https://education-university-backend.onrender.com/users/profile/me",
         data,
         {
           headers: { Authorization: `Bearer ${accessToken}` },

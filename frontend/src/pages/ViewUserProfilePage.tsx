@@ -74,7 +74,7 @@ function ViewUserProfilePage() {
             }
 
             try {
-                const res = await axios.get(`http://localhost:3000/users/profile/${id}`, {
+                const res = await axios.get(`https://education-university-backend.onrender.com/users/profile/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserData(res.data);
@@ -92,7 +92,7 @@ function ViewUserProfilePage() {
     const handleConfirmDelete = async () => {
         const accessToken = localStorage.getItem("token");
         try {
-            await axios.delete(`http://localhost:3000/api/admin/user/${id}`, {
+            await axios.delete(`https://education-university-backend.onrender.com/api/admin/user/${id}`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
             setDeleteModal({ isOpen: false });

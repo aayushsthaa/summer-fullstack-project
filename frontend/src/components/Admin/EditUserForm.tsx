@@ -57,7 +57,7 @@ function EditUserForm({ userData }: EditUserFormProps) {
   const onSubmit = async (data: IEditableUserData) => {
     const accessToken = localStorage.getItem("token");
     try {
-      await axios.put(`http://localhost:3000/api/admin/user/${userData._id}`, data, {
+      await axios.put(`https://education-university-backend.onrender.com/api/admin/user/${userData._id}`, data, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setModal({

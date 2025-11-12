@@ -53,7 +53,7 @@ function ListQuestionSet() {
 
       try {
           const accessToken = localStorage.getItem("token");
-          await axios.delete(`http://localhost:3000/api/questions/delete/${deleteModal.id}`, {
+          await axios.delete(`https://education-university-backend.onrender.com/api/questions/delete/${deleteModal.id}`, {
               headers: {
                   Authorization: `Bearer ${accessToken}`,
               },
@@ -91,12 +91,12 @@ function ListQuestionSet() {
         const headers = { Authorization: `Bearer ${accessToken}` };
         try {
             const promises = [
-                axios.get("http://localhost:3000/api/questions/set/list", { headers }),
-                axios.get("http://localhost:3000/users/profile/me", { headers })
+                axios.get("https://education-university-backend.onrender.com/api/questions/set/list", { headers }),
+                axios.get("https://education-university-backend.onrender.com/users/profile/me", { headers })
             ];
 
             if (role === 'professional') {
-                promises.push(axios.get("http://localhost:3000/users/profile/me/attempts", { headers }));
+                promises.push(axios.get("https://education-university-backend.onrender.com/users/profile/me/attempts", { headers }));
             }
             
             const [setsRes, profileRes, attemptsRes] = await Promise.all(promises);

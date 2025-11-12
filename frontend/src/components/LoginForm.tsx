@@ -31,7 +31,7 @@ function LoginForm() {
         );
         const profile = res.data;
         const backendRes = await axios.post(
-          "http://localhost:3000/users/auth/google",
+          "https://education-university-backend.onrender.com/users/auth/google",
           { profile }
         );
         handleAuthSuccess(backendRes.data.token);
@@ -58,7 +58,7 @@ function LoginForm() {
     e.preventDefault();
     const data = { email, password };
     axios
-      .post("http://localhost:3000/users/login", data)
+      .post("https://education-university-backend.onrender.com/users/login", data)
       .then((response) => {
         handleAuthSuccess(response.data.token);
       })

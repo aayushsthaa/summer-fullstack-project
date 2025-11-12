@@ -28,7 +28,7 @@ function AdminDashboardPage() {
       const headers = { Authorization: `Bearer ${accessToken}` };
 
       try {
-        const statsRes = await axios.get("http://localhost:3000/api/admin/dashboard-stats", { headers });
+        const statsRes = await axios.get("https://education-university-backend.onrender.com/api/admin/dashboard-stats", { headers });
         setStats(statsRes.data.stats);
       } catch (err) {
         console.error("Failed to fetch dashboard data:", err);

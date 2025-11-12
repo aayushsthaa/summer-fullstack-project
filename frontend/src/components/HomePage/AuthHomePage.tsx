@@ -44,9 +44,9 @@ function AuthHomePage() {
       const headers = { Authorization: `Bearer ${accessToken}` };
 
       try {
-        const profileRes = axios.get("http://localhost:3000/users/profile/me", { headers });
-        const attemptsRes = axios.get("http://localhost:3000/users/profile/me/attempts", { headers });
-        const usersRes = axios.get("http://localhost:3000/users/professionals", { headers });
+        const profileRes = axios.get("https://education-university-backend.onrender.com/users/profile/me", { headers });
+        const attemptsRes = axios.get("https://education-university-backend.onrender.com/users/profile/me/attempts", { headers });
+        const usersRes = axios.get("https://education-university-backend.onrender.com/users/professionals", { headers });
         
         const [profileData, attemptsData, usersData] = await Promise.all([profileRes, attemptsRes, usersRes]);
 

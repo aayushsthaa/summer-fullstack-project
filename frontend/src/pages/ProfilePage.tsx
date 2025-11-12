@@ -53,8 +53,8 @@ function ProfilePage() {
 
       const headers = { Authorization: `Bearer ${token}` };
       try {
-        const profileRes = await axios.get("http://localhost:3000/users/profile/me", { headers });
-        const attemptsRes = await axios.get("http://localhost:3000/users/profile/me/attempts", { headers });
+        const profileRes = await axios.get("https://education-university-backend.onrender.com/users/profile/me", { headers });
+        const attemptsRes = await axios.get("https://education-university-backend.onrender.com/users/profile/me/attempts", { headers });
 
         const { user, profile, stats, hasPassword } = profileRes.data;
         setProfileData({

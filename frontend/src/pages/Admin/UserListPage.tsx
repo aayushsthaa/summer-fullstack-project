@@ -33,7 +33,7 @@ function UserListPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await axios.get("http://localhost:3000/users/list", {
+        const res = await axios.get("https://education-university-backend.onrender.com/users/list", {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
@@ -60,7 +60,7 @@ function UserListPage() {
     const accessToken = localStorage.getItem("token");
     try {
       await axios.delete(
-        `http://localhost:3000/api/admin/user/${deleteModal.userId}`,
+        `https://education-university-backend.onrender.com/api/admin/user/${deleteModal.userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

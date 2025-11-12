@@ -33,7 +33,7 @@ function EditUserPage() {
       const accessToken = localStorage.getItem("token");
       try {
         const res = await axios.get(
-          `http://localhost:3000/users/profile/${id}`,
+          `https://education-university-backend.onrender.com/users/profile/${id}`,
           {
             headers: { authorization: `Bearer ${accessToken}` },
           }

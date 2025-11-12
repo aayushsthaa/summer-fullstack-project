@@ -40,7 +40,7 @@ function RegisterForm() {
           { headers: { Authorization: `Bearer ${access_token}` } }
         );
         const backendRes = await axios.post(
-          "http://localhost:3000/users/auth/google",
+          "https://education-university-backend.onrender.com/users/auth/google",
           { profile: res.data }
         );
         handleAuthSuccess(backendRes.data.token);
@@ -71,7 +71,7 @@ function RegisterForm() {
     const finalData = { name, username, email, password };
 
     axios
-      .post("http://localhost:3000/users/create", finalData)
+      .post("https://education-university-backend.onrender.com/users/create", finalData)
       .then(() => {
         setModal({
           isOpen: true,

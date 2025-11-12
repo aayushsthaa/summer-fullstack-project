@@ -44,7 +44,7 @@ function AttemptQuizPage() {
 
     async function fetchData() {
       axios
-        .get(`http://localhost:3000/api/questions/set/${id}`, {
+        .get(`https://education-university-backend.onrender.com/api/questions/set/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
